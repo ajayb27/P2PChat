@@ -9,7 +9,7 @@ import android.widget.TextView;
 
 import com.elan.p2pchat.Constants.AppConstants;
 import com.elan.p2pchat.Utils.AppPreferences;
-import com.elan.p2pchat.dialogs.KnowIPDialog;
+import com.elan.p2pchat.ui.dialogs.KnowIPDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 

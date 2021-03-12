@@ -1,19 +1,25 @@
 package com.elan.p2pchat.ui;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.graphics.Color;
+import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ScrollView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.elan.p2pchat.Constants.AppConstants;
@@ -38,8 +44,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextInputEditText ipEditText, nameEditText,pNumberEditText;
     Button connectBtn,ipBtn;
 
+    ConstraintLayout firstLayout, thirdLayout;
     LinearLayout conversationLayout;
     EditText messageEditText;
+    ImageButton sendButton,attachmentBtn;
+    ScrollView conversations;
 
 
     //Constants
@@ -67,7 +76,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (msg.what == MESSAGE_READ) {
                 byte[] readBuff = (byte[]) msg.obj;
                 String tempMsg = new String(readBuff, 0, msg.arg1);
-//                addMessage(Color.parseColor("#FFFFFF"), tempMsg);
+                addMessage(Color.parseColor("#FFFFFF"), tempMsg);
             }
             return true;
         }
@@ -111,6 +120,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         connectBtn.setOnClickListener(this);
         ipBtn.setOnClickListener(this);
 
+
+        attachmentBtn = (ImageButton) findViewById(R.id.send_files_and_voice_btn);
+        messageEditText = (EditText) findViewById(R.id.messageEditText);
+        sendButton = (ImageButton) findViewById(R.id.send_message_btn);
+        conversations = findViewById(R.id.conversations);
+        conversationLayout = findViewById(R.id.scroll_view_linear_layout);
+
+        firstLayout = (ConstraintLayout) findViewById(R.id.constraint_layout1);
+        thirdLayout = (ConstraintLayout) findViewById(R.id.constraint_layout2);
+
+        sendButton.setOnClickListener(this);
+        attachmentBtn.setOnClickListener(this);
+
     }
 
     @Override
@@ -122,6 +144,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.getIpBtn:
                 knowIPDialog.showDialog();
                 break;
+            case R.id.send_message_btn:
+                sendMessage();
         }
     }
 
@@ -137,7 +161,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if (ip.isEmpty()) {
             ipEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error_black_24dp, 0);
-            ipLayout.setError("Field cannot be empty");
+            ipLayout.setError("Please enter the target ip address");
             ipLayout.setErrorEnabled(true);
             f++;
         } else {
@@ -150,6 +174,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             appPreferences.insertString(AppConstants.NAME, name);
             appPreferences.insertString(AppConstants.PHONE_NUMBER, number);
             //connect
+            connect(ip);
         }
 
 
@@ -166,9 +191,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
-    private void connect() {
-        String targetIpAddress="";
-
+    private void connect(String targetIpAddress) {
         try {
             clientClass = new ClientClass(targetIpAddress, port);
             clientClass.start();
@@ -203,175 +226,113 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
     //Message UI handling
-//    private void addMessage(int color, String message) {
-//
-//        runOnUiThread(() -> {
-//                    TextView textView = new TextView(this);
-//                    TextView msgTime = new TextView(this);
-//
-//                    // if it's a sender message
-//                    if (color == Color.parseColor("#FCE4EC")
-//                            && !(aes.decrypt(message).contains("bg@%@bg"))
-//                            && !(aes.decrypt(message).contains("diconnect@%@d"))
-//                            && !(aes.decrypt(message).contains("file@%@"))
-//                            && !(aes.decrypt(message).contains("remove@%@"))) {
-//                        textView.setPadding(200, 20, 10, 10);
-//                        //textView.setMaxLines(5);
-//                        textView.setGravity(Gravity.RIGHT);
-//                        textView.setBackgroundResource(R.drawable.sender_messages_layout);
-//                        textView.setTextIsSelectable(true);
-//
-//                        LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                        // lp1.setMargins(10, 10, 10, 10);
-//                        // lp1.setMargins(10, 10, 10, 10);
-//                        //lp1.width = 400;
-//                        lp1.leftMargin = 200;
-//                        //lp1.rightMargin = 50;
-//                        textView.setLayoutParams(lp1);
-//
-//                        msgTime.setPadding(0,0,0,0);
-//
-//                        msgTime.setTextSize(14);
-//                        msgTime.setTextColor(Color.parseColor("#FCE4EC"));
-//                        msgTime.setTypeface(textView.getTypeface(), Typeface.ITALIC );
-//                        conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//                        msgTime.setGravity(Gravity.LEFT);
-//
-//                        LinearLayout.LayoutParams lp4 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                        // lp1.setMargins(10, 10, 10, 10);
-//                        // lp1.setMargins(10, 10, 10, 10);
-//                        //lp1.width = 400;
-//                        lp4.leftMargin = 200;
-//                        msgTime.setLayoutParams(lp4);
-//
-//                        //textView.setBackgroundResource(R.drawable.sender_messages_layout);
-//                    }
-//                    // else if receiver message
-//                    else if(!(aes.decrypt(message).contains("bg@%@bg"))
-//                            && !(aes.decrypt(message).contains("diconnect@%@d"))
-//                            && !(aes.decrypt(message).contains("file@%@"))
-//                            && !(aes.decrypt(message).contains("remove@%@"))) {
-//                        textView.setPadding(10, 20, 200, 10);
-//                        //textView.setMaxLines(5);
-//                        textView.setGravity(Gravity.LEFT);
-//                        textView.setBackgroundResource(R.drawable.receiver_messages_layout);
-//                        textView.setTextIsSelectable(true);
-//
-//                        LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                        //lp1.setMargins(10, 10, 10, 10);
-//                        //lp1.width = 400;
-//                        //lp1.leftMargin = 150;
-//                        lp2.rightMargin = 200;
-//                        textView.setLayoutParams(lp2);
-//
-//                        msgTime.setTextSize(14);
-//                        msgTime.setTextColor(Color.parseColor("#FFFFFF"));
-//                        msgTime.setTypeface(textView.getTypeface(), Typeface.ITALIC);
-//                        conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//                        LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-//                        //lp1.setMargins(10, 10, 10, 10);
-//                        //lp1.width = 400;
-//                        //lp1.leftMargin = 150;
-//                        lp3.rightMargin = 200;
-//                        msgTime.setGravity(Gravity.RIGHT);
-//                        msgTime.setLayoutParams(lp3);
-//
-//
-//                    }
-//                    textView.setTextColor(color);
-//                    Log.d(TAG, "encrypted msg: " + message);
-//                    String actualMessage = aes.decrypt(message);
-//                    Log.d(TAG, "decrypted msg: " + actualMessage);
-//
-//
-//                    String[]  messages = actualMessage.split("@%@", 0);
-//
-//                    // if its a file
-//                    if(messages[0].equals("file")){
-//                        textView.setPadding(0,0,0,0);
-//
-//                        textView.setTextSize(15);
-//                        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-//                        conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//                        textView.setGravity(Gravity.CENTER);
-//
-//
-//                        Log.d(TAG, "File Name: "+messages[1]);
-//                        Log.d(TAG, "File Contains:\n "+messages[2]);
-//                        if(color == Color.parseColor("#FCE4EC"))
-//                            textView.setText(messages[1]+" has been sent");
-//                        else{
-//                            textView.setText(messages[1]+" has been received and downloaded on android/data/com.example.p2p/");
-//                            writeToFile(messages[2], false, messages[1]);
-//                        }
-//
-//                    }
-//                    // if its a remove message
-//                    else if(messages[0].equals("remove")){
-//                        textView.setPadding(0,0,0,0);
-//
-//                        textView.setTextSize(15);
-//                        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-//                        conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//                        textView.setGravity(Gravity.CENTER);
-//                        removeAllChatForHim();
-//
-//                        if(color == Color.parseColor("#FCE4EC"))
-//                            textView.setText("You have removed all the previous message");
-//                        else{
-//                            textView.setText("Your pair has removed all the previous message");
-//                        }
-//
-//                    }
-//                    // if its a bg change message
-//                    else if(actualMessage.contains("bg@%@bg")){
-//                        changeBGforHim(actualMessage);
-//                        textView.setPadding(0,0,0,0);
-//
-//                        textView.setTextSize(13);
-//                        textView.setTextSize(15);
-//                        textView.setTypeface(textView.getTypeface(), Typeface.BOLD);
-//                        conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//                        textView.setGravity(Gravity.CENTER);
-//                        if(actualMessage.equals("bg@%@bg0")){
-//                            textView.setText("Background reset to default");
-//                        }
-//                        else
-//                            textView.setText("Background has been changed");
-//
-//                    }
-//                    // if its a disconnect message
-//                    else if(actualMessage.contains("diconnect@%@d")){
-//                        textView.setPadding(0,0,0,0);
-//
-//                        textView.setTextSize(13);
-//                        conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
-//                        textView.setGravity(Gravity.CENTER);
-//                        textView.setText("Your Pair has been disconnected.");
-//
-//                    }
-//                    // else it's a normal message
-//                    else{
-//                        Log.d(TAG, "messages[0]: " +messages[0]);
-//                        Log.d(TAG, "messages[0]: " +messages[1]);
-//
-//                        textView.setTextSize(20);
-//                        textView.setText(messages[0]); // setting message on the message textview
-//
-//                        msgTime.setText("(" + getTime(false) + ")"); // setting messing time
-//                    }
-//
-//
-//                    // creating divider between two messages
-//                    addDividerBetweenTwoMessages();
-//
-//                    // adding 2 more views in linear layout every time
-//                    conversationLayout.addView(textView);
-//                    conversationLayout.addView(msgTime);
-//                    conversations.post(() -> conversations.fullScroll(View.FOCUS_DOWN)); // for getting last message in first
-//                }
-//        );
-//    }
+    private void addMessage(int color, String message) {
+
+        runOnUiThread(() -> {
+                    TextView textView = new TextView(this);
+                    TextView msgTime = new TextView(this);
+
+
+                    // if it's a sender message
+                    try {
+                        if (color == Color.parseColor("#FCE4EC")
+                                && !(aes.decrypt(message).contains("bg@%@bg"))
+                                && !(aes.decrypt(message).contains("diconnect@%@d"))
+                                && !(aes.decrypt(message).contains("file@%@"))
+                                && !(aes.decrypt(message).contains("remove@%@"))) {
+                            textView.setPadding(200, 20, 10, 10);
+                            //textView.setMaxLines(5);
+                            textView.setGravity(Gravity.RIGHT);
+                            textView.setBackgroundResource(R.drawable.sender_messages_layout);
+                            textView.setTextIsSelectable(true);
+
+                            LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            // lp1.setMargins(10, 10, 10, 10);
+                            // lp1.setMargins(10, 10, 10, 10);
+                            //lp1.width = 400;
+                            lp1.leftMargin = 200;
+                            //lp1.rightMargin = 50;
+                            textView.setLayoutParams(lp1);
+
+                            msgTime.setPadding(0, 0, 0, 0);
+
+                            msgTime.setTextSize(14);
+                            msgTime.setTextColor(Color.parseColor("#FCE4EC"));
+                            msgTime.setTypeface(textView.getTypeface(), Typeface.ITALIC);
+                            conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
+                            msgTime.setGravity(Gravity.LEFT);
+
+                            LinearLayout.LayoutParams lp4 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            lp4.leftMargin = 200;
+                            msgTime.setLayoutParams(lp4);
+                        }
+                        // else if receiver message
+                        else if (!(aes.decrypt(message).contains("bg@%@bg"))
+                                && !(aes.decrypt(message).contains("diconnect@%@d"))
+                                && !(aes.decrypt(message).contains("file@%@"))
+                                && !(aes.decrypt(message).contains("remove@%@"))) {
+                            textView.setPadding(10, 20, 200, 10);
+                            //textView.setMaxLines(5);
+                            textView.setGravity(Gravity.LEFT);
+                            textView.setBackgroundResource(R.drawable.receiver_messages_layout);
+                            textView.setTextIsSelectable(true);
+
+                            LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            //lp1.setMargins(10, 10, 10, 10);
+                            //lp1.width = 400;
+                            //lp1.leftMargin = 150;
+                            lp2.rightMargin = 200;
+                            textView.setLayoutParams(lp2);
+
+                            msgTime.setTextSize(14);
+                            msgTime.setTextColor(Color.parseColor("#FFFFFF"));
+                            msgTime.setTypeface(textView.getTypeface(), Typeface.ITALIC);
+                            conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
+                            LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
+                            //lp1.setMargins(10, 10, 10, 10);
+                            //lp1.width = 400;
+                            //lp1.leftMargin = 150;
+                            lp3.rightMargin = 200;
+                            msgTime.setGravity(Gravity.RIGHT);
+                            msgTime.setLayoutParams(lp3);
+
+
+                        }
+
+                    textView.setTextColor(color);
+                    textView.setTextColor(getResources().getColor(R.color.black));
+                    Log.d(TAG, "encrypted msg: " + message);
+                    String actualMessage = aes.decrypt(message);
+                    Log.d(TAG, "decrypted msg: " + actualMessage);
+
+
+                    String[]  messages = actualMessage.split("@%@", 0);
+
+
+                    // else it's a normal message
+                        Log.d(TAG, "messages[0]: " +messages[0]);
+                        Log.d(TAG, "messages[0]: " +messages[1]);
+
+                        textView.setTextSize(20);
+                        textView.setText(messages[0]); // setting message on the message textview
+                        String msg = "(" + Utils.getTime(false) + ")";
+                        msgTime.setText(msg); // setting messing time
+
+
+                    // creating divider between two messages
+                    addDividerBetweenTwoMessages();
+
+                    // adding 2 more views in linear layout every time
+                    conversationLayout.addView(textView);
+                    conversationLayout.addView(msgTime);
+                    conversations.post(() -> conversations.fullScroll(View.FOCUS_DOWN)); // for getting last message in first
+
+                    }catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+        );
+    }
 
     private void addDividerBetweenTwoMessages() {
         ImageView divider = new ImageView(this);
@@ -385,6 +346,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     // custom show toast function
     public void showToast(String message) {
         runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
+    }
+
+    public void enableComponent() {
+        runOnUiThread(() -> {
+            firstLayout.setVisibility(View.GONE);
+            thirdLayout.setVisibility(View.VISIBLE);
+        });
     }
 
     @Override
@@ -468,7 +436,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Log.d(TAG, "Client is connected to server");
 
                 // enabling invisible components
-//                enableComponent();
+                enableComponent();
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d(TAG, "Can't connect to server. Check the IP address and Port number and try again: " + e);
@@ -517,10 +485,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             new Thread(() -> {
                 try {
                     outputStream.write(msg.getBytes());
-//                    addMessage(Color.parseColor("#FCE4EC"), msg);
-                    runOnUiThread(() ->
-                            messageEditText.setText("")
-                    );
+                    addMessage(Color.parseColor("#FCE4EC"), msg);
+//                    runOnUiThread(() ->
+//                            messageEditText.setText("")
+//
+//                    );
+                    runOnUiThread(new Runnable() {
+                        @Override
+                        public void run() {
+                            messageEditText.setText("");
+                            messageEditText.requestFocus();
+                            messageEditText.setSelection(0);
+                        }
+                    });
                 } catch (IOException e) {
                     Log.d(TAG, "Can't send message: " + e);
                 } catch (Exception e) {
