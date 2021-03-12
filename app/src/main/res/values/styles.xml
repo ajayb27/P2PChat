@@ -8,4 +8,10 @@
         <item name="colorAccent">@color/colorAccent</item>
     </style>
 
+    <style name="hintColor" parent="Widget.Design.TextInputLayout">
+        <item name="android:textColor">#FF0000</item>
+        <item name="android:textSize">10sp</item>
+        <item name="android:paddingTop">1dp</item>
+    </style>
+
 </resources>
