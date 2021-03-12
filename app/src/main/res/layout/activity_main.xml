@@ -6,10 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
-<!--    <include-->
-<!--        android:id="@+id/toolbar_home"-->
-<!--        layout="@layout/toolbar" />-->
-
     <TextView
         android:id="@+id/textView"
         android:layout_width="0dp"
@@ -35,7 +31,9 @@
         android:layout_marginTop="25dp"
         android:layout_marginRight="15dp"
         android:layout_marginBottom="30dp"
-        app:cardCornerRadius="10dp"
+        app:cardCornerRadius="15dp"
+        android:elevation="8dp"
+        app:cardElevation="8dp"
         app:cardUseCompatPadding="true"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/textView">
@@ -76,7 +74,7 @@
         </com.google.android.material.textfield.TextInputLayout>
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/porttf"
+            android:id="@+id/nametf"
             style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -84,7 +82,7 @@
             android:layout_marginRight="20dp"
             android:layout_marginTop="20dp"
             android:layout_marginBottom="20dp"
-            android:hint="PORT NUMBER *"
+            android:hint="NAME "
             app:boxCornerRadiusBottomEnd="10dp"
             app:boxCornerRadiusBottomStart="10dp"
             app:boxCornerRadiusTopEnd="10dp"
@@ -92,16 +90,15 @@
             app:boxCornerRadiusTopStart="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/iptf"
-            app:layout_constraintBottom_toBottomOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/iptf">
 
             <com.google.android.material.textfield.TextInputEditText
-                android:id="@+id/portet"
+                android:id="@+id/namet"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:drawablePadding="5dp"
                 android:imeOptions="actionNext"
-                android:inputType="number"
+                android:inputType="textPersonName"
                 android:maxLines="1"
                 android:textSize="18sp"
                 android:paddingLeft="10dp"
@@ -109,20 +106,55 @@
 
         </com.google.android.material.textfield.TextInputLayout>
 
+            <com.google.android.material.textfield.TextInputLayout
+                android:id="@+id/numbertf"
+                style="@style/Widget.MaterialComponents.TextInputLayout.OutlinedBox"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="20dp"
+                android:layout_marginRight="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginBottom="20dp"
+                android:hint="CONTACT NUMBER "
+                app:boxCornerRadiusBottomEnd="10dp"
+                app:boxCornerRadiusBottomStart="10dp"
+                app:boxCornerRadiusTopEnd="10dp"
+                app:errorTextAppearance="@style/hintColor"
+                app:boxCornerRadiusTopStart="10dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/nametf"
+                app:layout_constraintBottom_toBottomOf="parent">
+
+                <com.google.android.material.textfield.TextInputEditText
+                    android:id="@+id/numbert"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:drawablePadding="5dp"
+                    android:imeOptions="actionNext"
+                    android:inputType="phone"
+                    android:maxLines="1"
+                    android:textSize="18sp"
+                    android:paddingLeft="10dp"
+                    android:singleLine="true" />
+
+            </com.google.android.material.textfield.TextInputLayout>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
     </androidx.cardview.widget.CardView>
 
     <Button
         android:id="@+id/connectBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="30dp"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
         android:paddingLeft="40dp"
         android:paddingRight="40dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
         android:backgroundTint="@color/colorPrimary"
+        android:background="@drawable/dialog_border"
         android:text="Connect"
         android:textColor="#fff"
         android:textStyle="bold"
@@ -131,40 +163,36 @@
         app:layout_constraintStart_toStartOf="@id/card_connect"
         app:layout_constraintTop_toBottomOf="@id/card_connect" />
 
-    <TextView
-        android:id="@+id/ipText"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:text="want to know your ip ?"
-        android:textAllCaps="true"
-        app:layout_constraintTop_toBottomOf="@id/connectBtn"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:gravity="center"
-        android:layout_margin="20dp"
-        android:textSize="15sp"
-        android:textStyle="bold"/>
+<!--    <TextView-->
+<!--        android:id="@+id/ipText"-->
+<!--        android:layout_width="0dp"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:text="want to know your ip ?"-->
+<!--        android:textAllCaps="true"-->
+<!--        app:layout_constraintTop_toBottomOf="@id/connectBtn"-->
+<!--        app:layout_constraintStart_toStartOf="parent"-->
+<!--        app:layout_constraintEnd_toEndOf="parent"-->
+<!--        android:gravity="center"-->
+<!--        android:layout_margin="20dp"-->
+<!--        android:textSize="15sp"-->
+<!--        android:textStyle="bold"/>-->
 
     <Button
         android:id="@+id/getIpBtn"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="20dp"
-        android:paddingLeft="40dp"
-        android:paddingRight="40dp"
-        android:paddingTop="15dp"
-        android:paddingBottom="15dp"
         android:backgroundTint="@color/colorPrimary"
-        android:text="get ip"
+        android:layout_marginLeft="50dp"
+        android:layout_marginRight="50dp"
+        android:layout_marginTop="20dp"
+        android:background="@drawable/dialog_border"
+        android:text="know your ip address "
         android:textColor="#fff"
-        android:textStyle="bold"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@id/card_connect"
         app:layout_constraintStart_toStartOf="@id/card_connect"
-        app:layout_constraintTop_toBottomOf="@id/ipText" />
-
-
-
+        app:layout_constraintTop_toBottomOf="@id/connectBtn"/>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

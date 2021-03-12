@@ -18,8 +18,10 @@ import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.elan.p2pchat.Constants.AppConstants;
 import com.elan.p2pchat.R;
 import com.elan.p2pchat.Utils.AES;
+import com.elan.p2pchat.Utils.AppPreferences;
 import com.elan.p2pchat.dialogs.KnowIPDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -33,9 +35,10 @@ import java.net.Socket;
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
 
     //Views
-    TextInputLayout ipLayout, portLayout;
-    TextInputEditText ipEditText, portEditText;
+    TextInputLayout ipLayout, nameLayout, pNumberLayout;
+    TextInputEditText ipEditText, nameEditText,pNumberEditText;
     Button connectBtn,ipBtn;
+    AppPreferences appPreferences;
 
     LinearLayout conversationLayout;
     EditText messageEditText;
@@ -77,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        appPreferences = AppPreferences.getAppPreferences(this);
+
         aes = AES.getInstance();
         startServer();
 
@@ -87,10 +92,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private void iniView() {
 
         ipLayout = (TextInputLayout) findViewById(R.id.iptf);
-        portLayout = (TextInputLayout) findViewById(R.id.porttf);
+        nameLayout = (TextInputLayout) findViewById(R.id.nametf);
+        pNumberLayout = (TextInputLayout) findViewById(R.id.numbertf);
 
         ipEditText = (TextInputEditText) findViewById(R.id.ipet);
-        portEditText = (TextInputEditText) findViewById(R.id.portet);
+        nameEditText = (TextInputEditText) findViewById(R.id.namet);
+        pNumberEditText=(TextInputEditText)findViewById(R.id.numbert);
+
+        if (appPreferences.containsKey(AppConstants.NAME))
+            nameEditText.setText(appPreferences.getString(AppConstants.NAME));
+
+        if (appPreferences.containsKey(AppConstants.PHONE_NUMBER))
+            pNumberEditText.setText(appPreferences.getString(AppConstants.PHONE_NUMBER));
 
         connectBtn = (Button) findViewById(R.id.connectBtn);
         ipBtn = (Button) findViewById(R.id.getIpBtn);
@@ -115,12 +128,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void connectMethod() {
-        String ip, port;
+        String ip, name,number;
         int f = 0;
         ip = ipLayout.getEditText().getText().toString().trim();
-        port = portLayout.getEditText().getText().toString().trim();
+        name = nameLayout.getEditText().getText().toString().trim();
+        number=pNumberLayout.getEditText().getText().toString().trim();
+
         ipEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
-        portEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        nameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
         if (ip.isEmpty()) {
             ipEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error_black_24dp, 0);
@@ -132,18 +147,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ipLayout.setErrorEnabled(false);
         }
 
-        if (port.isEmpty()) {
-            portEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error_black_24dp, 0);
-            portLayout.setError("Field cannot be empty");
-            portLayout.setErrorEnabled(true);
-            f++;
-        } else {
-            portLayout.setError(null);
-            portLayout.setErrorEnabled(false);
-        }
-
         if(f==0)
         {
+            appPreferences.insertString(AppConstants.NAME, name);
+            appPreferences.insertString(AppConstants.PHONE_NUMBER, number);
             //connect
         }
 
@@ -489,5 +496,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }).start();
 
         }
+    }
+
+    @Override
+    protected void onPause() {
+        super.onPause();
+        appPreferences.detach();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        appPreferences=AppPreferences.getAppPreferences(this);
     }
 }
