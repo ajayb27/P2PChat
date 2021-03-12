@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item
+        android:title="Disconnect"
+        android:id="@+id/main_disconnect_option"
+        app:showAsAction="never"/>
+
+    <item
+        android:title="Remove All Chat"
+        android:id="@+id/main_remove_chat_option"
+        app:showAsAction="never"/>
+
+
+</menu>

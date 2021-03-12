@@ -1,18 +1,21 @@
-package com.elan.p2pchat.dialogs;
+package com.elan.p2pchat.ui.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.elan.p2pchat.R;
+import com.elan.p2pchat.Utils.Utils;
 
 public class KnowIPDialog implements View.OnClickListener {
 
     private Activity activity;
     private AlertDialog alertDialog;
     private Button ok;
+    private TextView textViewIP;
 
     public KnowIPDialog(Activity activity) {
         this.activity = activity;
@@ -20,6 +23,8 @@ public class KnowIPDialog implements View.OnClickListener {
     }
 
     public void showDialog() {
+        String ipAddress = Utils.getIPAddress(true);
+        textViewIP.setText(ipAddress);
         alertDialog.show();
     }
 
@@ -33,21 +38,20 @@ public class KnowIPDialog implements View.OnClickListener {
         builder.setCancelable(true);
         alertDialog = builder.create();
 
+        textViewIP = (TextView) layout.findViewById(R.id.ip_tv);
         ok = (Button) layout.findViewById(R.id.okBtn);
         ok.setOnClickListener(this);
     }
 
 
-    public void closeDialog() {
+    private void closeDialog() {
         alertDialog.dismiss();
     }
 
     @Override
     public void onClick(View view) {
-        switch (view.getId()) {
-            case R.id.okBtn:
-                closeDialog();
-                break;
+        if (view.getId() == R.id.okBtn) {
+            closeDialog();
         }
     }
 

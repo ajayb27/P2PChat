@@ -3,26 +3,25 @@ package com.elan.p2pchat.ui;
 import androidx.appcompat.app.AppCompatActivity;
 
 import android.graphics.Color;
-import android.graphics.Typeface;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.TextUtils;
 import android.util.Log;
-import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import com.elan.p2pchat.Constants.AppConstants;
 import com.elan.p2pchat.R;
 import com.elan.p2pchat.Utils.AES;
 import com.elan.p2pchat.Utils.AppPreferences;
-import com.elan.p2pchat.dialogs.KnowIPDialog;
+import com.elan.p2pchat.Utils.Utils;
+import com.elan.p2pchat.ui.dialogs.KnowIPDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -38,7 +37,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextInputLayout ipLayout, nameLayout, pNumberLayout;
     TextInputEditText ipEditText, nameEditText,pNumberEditText;
     Button connectBtn,ipBtn;
-    AppPreferences appPreferences;
 
     LinearLayout conversationLayout;
     EditText messageEditText;
@@ -52,6 +50,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Objects
     AES aes;
+    AppPreferences appPreferences;
     SendReceive sendReceive;
     ServerClass serverClass;
     ClientClass clientClass;
@@ -81,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         appPreferences = AppPreferences.getAppPreferences(this);
-
         aes = AES.getInstance();
         startServer();
 
@@ -177,6 +175,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Toast.makeText(this,"Your sending port and listening port have been set successfully",Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this,"ERROR : "+e.getMessage(),Toast.LENGTH_SHORT).show();
+        }
+    }
+
+    private void sendMessage() {
+
+        String msg = messageEditText.getText().toString().trim();
+        String msgTime = Utils.getTime(false);
+        String msgWithTime = msg + "@%@" + msgTime;
+
+        if(TextUtils.isEmpty(msg)) {
+            messageEditText.requestFocus();
+            messageEditText.setError("Enter the message");
+        } else {
+            try {
+                String encryptedData = aes.encrypt(msgWithTime);
+
+                //sending the encrypted data
+                sendReceive.write(encryptedData);
+
+            } catch (Exception e) {
+                Log.d(TAG,"ERROR WITH ENCRYPTION : "+e.getMessage());
+                e.printStackTrace();
+            }
         }
     }
 
@@ -366,6 +387,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         runOnUiThread(() -> Toast.makeText(this, message, Toast.LENGTH_SHORT).show());
     }
 
+    @Override
+    protected void onPause() {
+        super.onPause();
+        appPreferences.detach();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        appPreferences=AppPreferences.getAppPreferences(this);
+    }
+
 
 
     /*
@@ -496,17 +529,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }).start();
 
         }
-    }
-
-    @Override
-    protected void onPause() {
-        super.onPause();
-        appPreferences.detach();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        appPreferences=AppPreferences.getAppPreferences(this);
     }
 }
