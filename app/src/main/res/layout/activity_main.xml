@@ -132,7 +132,7 @@
         app:layout_constraintTop_toBottomOf="@id/card_connect" />
 
     <TextView
-        android:id="@+id/ipBtn"
+        android:id="@+id/ipText"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="want to know your ip ?"
@@ -144,6 +144,24 @@
         android:layout_margin="20dp"
         android:textSize="15sp"
         android:textStyle="bold"/>
+
+    <Button
+        android:id="@+id/getIpBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:paddingLeft="40dp"
+        android:paddingRight="40dp"
+        android:paddingTop="15dp"
+        android:paddingBottom="15dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="get ip"
+        android:textColor="#fff"
+        android:textStyle="bold"
+        android:textSize="18sp"
+        app:layout_constraintEnd_toEndOf="@id/card_connect"
+        app:layout_constraintStart_toStartOf="@id/card_connect"
+        app:layout_constraintTop_toBottomOf="@id/ipText" />
 
 
 

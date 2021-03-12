@@ -15,7 +15,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private TextInputEditText ipet, portet;
     private TextInputLayout ipl, portl;
-    private Button connect;
+    private Button connect,ipBtn;
     private TextView knowIPTv;
     private KnowIPDialog knowIPDialog;
 
@@ -33,11 +33,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ipl = (TextInputLayout) findViewById(R.id.iptf);
         portl = (TextInputLayout) findViewById(R.id.porttf);
         connect = (Button) findViewById(R.id.connectBtn);
-        knowIPTv = (TextView) findViewById(R.id.ipBtn);
+        ipBtn = (Button) findViewById(R.id.getIpBtn);
         knowIPDialog=new KnowIPDialog(this);
 
         connect.setOnClickListener(this);
-        knowIPTv.setOnClickListener(this);
+        ipBtn.setOnClickListener(this);
     }
 
     @Override
@@ -46,7 +46,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.connectBtn:
                 connectMethod();
                 break;
-            case R.id.ipBtn:
+            case R.id.getIpBtn:
                 knowIPDialog.showDialog();
                 break;
         }
