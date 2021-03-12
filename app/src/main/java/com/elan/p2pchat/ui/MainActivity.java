@@ -103,8 +103,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     @Override
-    public void onClick(View v) {
-
+    public void onClick(View view) {
+        switch (view.getId()) {
+            case R.id.connectBtn:
+                connectMethod();
+                break;
+            case R.id.getIpBtn:
+                knowIPDialog.showDialog();
+                break;
+        }
     }
 
     private void connectMethod() {
