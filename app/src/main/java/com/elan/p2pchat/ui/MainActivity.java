@@ -1,8 +1,13 @@
 package com.elan.p2pchat.ui;
 
+import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -12,6 +17,9 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -28,6 +36,7 @@ import com.elan.p2pchat.Utils.AES;
 import com.elan.p2pchat.Utils.AppPreferences;
 import com.elan.p2pchat.Utils.Utils;
 import com.elan.p2pchat.ui.dialogs.KnowIPDialog;
+import com.elan.p2pchat.ui.dialogs.ProfileDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
@@ -41,20 +50,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Views
     TextInputLayout ipLayout, nameLayout, pNumberLayout;
-    TextInputEditText ipEditText, nameEditText,pNumberEditText;
-    Button connectBtn,ipBtn;
+    TextInputEditText ipEditText, nameEditText, pNumberEditText;
+    Button connectBtn, ipBtn;
+    ImageView scannerView;
 
     ConstraintLayout firstLayout, thirdLayout;
     LinearLayout conversationLayout;
     EditText messageEditText;
-    ImageButton sendButton,attachmentBtn;
+    ImageButton sendButton, attachmentBtn;
     ScrollView conversations;
 
 
     //Constants
-    static final int MESSAGE_READ=1;
+    static final int MESSAGE_READ = 1;
     static final String TAG = "testWeChat";
-    static  final int port = 2907;
+    static final int port = 2907;
 
 
     //Objects
@@ -66,10 +76,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Dialogs
     KnowIPDialog knowIPDialog;
+    ProfileDialog profileDialog;
 
 
-
-    Handler handler=new Handler(new Handler.Callback() {
+    Handler handler = new Handler(new Handler.Callback() {
         @Override
         public boolean handleMessage(Message msg) {
 
@@ -96,6 +106,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
+    @SuppressLint("RestrictedApi")
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater menuInflater = getMenuInflater();
+        menuInflater.inflate(R.menu.menu, menu);
+        if (menu instanceof MenuBuilder) {
+            MenuBuilder menuBuilder = (MenuBuilder) menu;
+            menuBuilder.setOptionalIconsVisible(true);
+        }
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+
+        switch (item.getItemId()) {
+
+            case R.id.profile:
+                if(profileDialog!=null)
+                profileDialog.showDialog();
+                return true;
+
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+
     private void iniView() {
 
         ipLayout = (TextInputLayout) findViewById(R.id.iptf);
@@ -104,7 +141,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         ipEditText = (TextInputEditText) findViewById(R.id.ipet);
         nameEditText = (TextInputEditText) findViewById(R.id.namet);
-        pNumberEditText=(TextInputEditText)findViewById(R.id.numbert);
+        pNumberEditText = (TextInputEditText) findViewById(R.id.numbert);
+        scannerView = (ImageView) findViewById(R.id.scan_image);
 
         if (appPreferences.containsKey(AppConstants.NAME))
             nameEditText.setText(appPreferences.getString(AppConstants.NAME));
@@ -115,9 +153,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         connectBtn = (Button) findViewById(R.id.connectBtn);
         ipBtn = (Button) findViewById(R.id.getIpBtn);
 
-        knowIPDialog=new KnowIPDialog(this);
+
+        knowIPDialog = new KnowIPDialog(this);
+        profileDialog = new ProfileDialog(this);
+
 
         connectBtn.setOnClickListener(this);
+        scannerView.setOnClickListener(this);
         ipBtn.setOnClickListener(this);
 
 
@@ -144,23 +186,46 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.getIpBtn:
                 knowIPDialog.showDialog();
                 break;
+            case R.id.scan_image:
+                openScanner();
+                break;
             case R.id.send_message_btn:
                 sendMessage();
+
+        }
+    }
+
+    private void openScanner() {
+        Log.d("qwerty", "here11");
+        Intent intent = new Intent(MainActivity.this, QRScanning.class);
+        startActivityForResult(intent, 2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == 2 && data != null) {
+            String ipAddress = data.getStringExtra("ipAddress");
+            if (ipAddress != null) {
+                ipEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+                ipEditText.setText(ipAddress);
+            }
+
         }
     }
 
     private void connectMethod() {
-        String ip, name,number;
+        String ip, name, number;
         int f = 0;
         ip = ipLayout.getEditText().getText().toString().trim();
         name = nameLayout.getEditText().getText().toString().trim();
-        number=pNumberLayout.getEditText().getText().toString().trim();
+        number = pNumberLayout.getEditText().getText().toString().trim();
 
         ipEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         nameEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
 
         if (ip.isEmpty()) {
-            ipEditText.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error_black_24dp, 0);
+            ipEditText.setCompoundDrawablesWithIntrinsicBounds(R.drawable.ic_error_black_24dp, 0, 0, 0);
             ipLayout.setError("Please enter the target ip address");
             ipLayout.setErrorEnabled(true);
             f++;
@@ -169,8 +234,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             ipLayout.setErrorEnabled(false);
         }
 
-        if(f==0)
-        {
+        if (f == 0) {
             appPreferences.insertString(AppConstants.NAME, name);
             appPreferences.insertString(AppConstants.PHONE_NUMBER, number);
             //connect
@@ -186,7 +250,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             serverClass = new ServerClass(port);
             serverClass.start();
             Toast.makeText(this, "Server has been started..", Toast.LENGTH_SHORT).show();
-        }catch (Exception e) {
+        } catch (Exception e) {
             Toast.makeText(this, "Server starting failure..", Toast.LENGTH_SHORT).show();
         }
     }
@@ -195,9 +259,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             clientClass = new ClientClass(targetIpAddress, port);
             clientClass.start();
-            Toast.makeText(this,"Your sending port and listening port have been set successfully",Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "Your sending port and listening port have been set successfully", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
-            Toast.makeText(this,"ERROR : "+e.getMessage(),Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, "ERROR : " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -207,7 +271,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String msgTime = Utils.getTime(false);
         String msgWithTime = msg + "@%@" + msgTime;
 
-        if(TextUtils.isEmpty(msg)) {
+        if (TextUtils.isEmpty(msg)) {
             messageEditText.requestFocus();
             messageEditText.setError("Enter the message");
         } else {
@@ -218,7 +282,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 sendReceive.write(encryptedData);
 
             } catch (Exception e) {
-                Log.d(TAG,"ERROR WITH ENCRYPTION : "+e.getMessage());
+                Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -299,19 +363,19 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         }
 
-                    textView.setTextColor(color);
-                    textView.setTextColor(getResources().getColor(R.color.black));
-                    Log.d(TAG, "encrypted msg: " + message);
-                    String actualMessage = aes.decrypt(message);
-                    Log.d(TAG, "decrypted msg: " + actualMessage);
+                        textView.setTextColor(color);
+                        textView.setTextColor(getResources().getColor(R.color.black));
+                        Log.d(TAG, "encrypted msg: " + message);
+                        String actualMessage = aes.decrypt(message);
+                        Log.d(TAG, "decrypted msg: " + actualMessage);
 
 
-                    String[]  messages = actualMessage.split("@%@", 0);
+                        String[] messages = actualMessage.split("@%@", 0);
 
 
-                    // else it's a normal message
-                        Log.d(TAG, "messages[0]: " +messages[0]);
-                        Log.d(TAG, "messages[0]: " +messages[1]);
+                        // else it's a normal message
+                        Log.d(TAG, "messages[0]: " + messages[0]);
+                        Log.d(TAG, "messages[0]: " + messages[1]);
 
                         textView.setTextSize(20);
                         textView.setText(messages[0]); // setting message on the message textview
@@ -319,15 +383,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         msgTime.setText(msg); // setting messing time
 
 
-                    // creating divider between two messages
-                    addDividerBetweenTwoMessages();
+                        // creating divider between two messages
+                        addDividerBetweenTwoMessages();
 
-                    // adding 2 more views in linear layout every time
-                    conversationLayout.addView(textView);
-                    conversationLayout.addView(msgTime);
-                    conversations.post(() -> conversations.fullScroll(View.FOCUS_DOWN)); // for getting last message in first
+                        // adding 2 more views in linear layout every time
+                        conversationLayout.addView(textView);
+                        conversationLayout.addView(msgTime);
+                        conversations.post(() -> conversations.fullScroll(View.FOCUS_DOWN)); // for getting last message in first
 
-                    }catch (Exception e) {
+                    } catch (Exception e) {
                         e.printStackTrace();
                     }
                 }
@@ -364,7 +428,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     protected void onResume() {
         super.onResume();
-        appPreferences=AppPreferences.getAppPreferences(this);
+        appPreferences = AppPreferences.getAppPreferences(this);
+        Log.d("qwerty","here");
     }
 
 

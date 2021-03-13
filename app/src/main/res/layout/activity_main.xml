@@ -21,7 +21,7 @@
             android:layout_margin="20dp"
             android:layout_marginTop="20dp"
             android:gravity="center"
-            android:text="enter details to connect"
+            android:text="TARGET IP ADDRESS"
             android:textAllCaps="true"
             android:textColor="@color/colorPrimary"
             android:textSize="30sp"
@@ -36,11 +36,11 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginLeft="15dp"
-            android:layout_marginTop="25dp"
+            android:layout_marginTop="5dp"
             android:layout_marginRight="15dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginBottom="20dp"
             android:elevation="8dp"
-            app:cardCornerRadius="15dp"
+            app:cardCornerRadius="10dp"
             app:cardElevation="8dp"
             app:cardUseCompatPadding="true"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,8 +56,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginRight="20dp"
+                    android:layout_marginBottom="15dp"
                     android:hint="IP ADDRESS *"
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
@@ -66,20 +67,72 @@
                     app:errorTextAppearance="@style/hintColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintBottom_toBottomOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/ipet"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:drawablePadding="5dp"
                         android:imeOptions="actionNext"
                         android:maxLines="1"
-                        android:paddingLeft="10dp"
+                        android:paddingStart="10dp"
                         android:singleLine="true"
                         android:textSize="18sp" />
 
+
                 </com.google.android.material.textfield.TextInputLayout>
+
+
+                <ImageView
+                    android:id="@+id/scan_image"
+                    android:layout_width="wrap_content"
+                    android:layout_height="30dp"
+                    android:layout_marginRight="20dp"
+                    android:background="#fff"
+                    android:src="@drawable/ic_crop_free_black_24dp"
+                    app:layout_constraintEnd_toEndOf="@id/iptf"
+                    app:layout_constraintBottom_toBottomOf="@id/iptf"
+                    app:layout_constraintTop_toTopOf="@id/iptf" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.cardview.widget.CardView>
+
+        <TextView
+            android:id="@+id/your_details_textView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="20dp"
+            android:layout_marginRight="20dp"
+            android:layout_marginTop="5dp"
+            android:gravity="center"
+            android:text="YOUR DEtails"
+            android:textAllCaps="true"
+            android:textColor="@color/colorPrimary"
+            android:textSize="30sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/card_connect" />
+
+
+        <androidx.cardview.widget.CardView
+            android:id="@+id/card_details"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="15dp"
+            android:layout_marginTop="5dp"
+            android:layout_marginRight="15dp"
+            android:layout_marginBottom="30dp"
+            android:elevation="8dp"
+            app:cardCornerRadius="10dp"
+            app:cardElevation="8dp"
+            app:cardUseCompatPadding="true"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/your_details_textView">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
 
                 <com.google.android.material.textfield.TextInputLayout
                     android:id="@+id/nametf"
@@ -87,9 +140,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="15dp"
                     android:hint="NAME "
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
@@ -98,7 +151,7 @@
                     app:errorTextAppearance="@style/hintColor"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/iptf">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/namet"
@@ -120,9 +173,9 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginLeft="20dp"
-                    android:layout_marginTop="20dp"
+                    android:layout_marginTop="15dp"
                     android:layout_marginRight="20dp"
-                    android:layout_marginBottom="20dp"
+                    android:layout_marginBottom="15dp"
                     android:hint="CONTACT NUMBER "
                     app:boxCornerRadiusBottomEnd="10dp"
                     app:boxCornerRadiusBottomStart="10dp"
@@ -167,9 +220,9 @@
             android:textColor="#fff"
             android:textSize="18sp"
             android:textStyle="bold"
-            app:layout_constraintEnd_toEndOf="@id/card_connect"
-            app:layout_constraintStart_toStartOf="@id/card_connect"
-            app:layout_constraintTop_toBottomOf="@id/card_connect" />
+            app:layout_constraintEnd_toEndOf="@id/card_details"
+            app:layout_constraintStart_toStartOf="@id/card_details"
+            app:layout_constraintTop_toBottomOf="@id/card_details" />
 
         <!--    <TextView-->
         <!--        android:id="@+id/ipText"-->

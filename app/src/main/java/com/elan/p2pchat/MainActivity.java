@@ -1,14 +1,21 @@
 package com.elan.p2pchat;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
+import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.elan.p2pchat.Constants.AppConstants;
 import com.elan.p2pchat.Utils.AppPreferences;
+import com.elan.p2pchat.ui.QRScanning;
 import com.elan.p2pchat.ui.dialogs.KnowIPDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
@@ -20,6 +27,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private Button connect,ipBtn;
     private KnowIPDialog knowIPDialog;
     private AppPreferences appPreferences;
+    private ImageView scannerView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,6 +35,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         initView();
+
     }
 
     private void initView() {
@@ -41,6 +50,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ipBtn = (Button) findViewById(R.id.getIpBtn);
         knowIPDialog=new KnowIPDialog(this);
 
+        scannerView=(ImageView) findViewById(R.id.scan_image);
+
         if (appPreferences.containsKey(AppConstants.NAME))
             namet.setText(appPreferences.getString(AppConstants.NAME));
 
@@ -48,6 +59,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             numbert.setText(appPreferences.getString(AppConstants.PHONE_NUMBER));
 
         connect.setOnClickListener(this);
+        scannerView.setOnClickListener(this);
         ipBtn.setOnClickListener(this);
     }
 
@@ -60,6 +72,25 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.getIpBtn:
                 knowIPDialog.showDialog();
                 break;
+            case R.id.scan_image:
+                openScanner();
+                break;
+        }
+    }
+
+    private void openScanner() {
+        Log.d("qwerty","here11");
+    Intent intent =new Intent(MainActivity.this, QRScanning.class);
+    startActivityForResult(intent,2);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if(requestCode==2)
+        {
+            String ipAddress=data.getStringExtra("ipAddress");
+            ipet.setText(ipAddress);
         }
     }
 
@@ -69,12 +100,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         ip = ipl.getEditText().getText().toString().trim();
         name = namel.getEditText().getText().toString().trim();
         number = numberl.getEditText().getText().toString().trim();
-        ipet.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
+        ipet.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_crop_free_black_24dp, 0);
         namet.setCompoundDrawablesWithIntrinsicBounds(0, 0, 0, 0);
         numbert.setCompoundDrawablesWithIntrinsicBounds(0,0,0,0);
 
         if (ip.isEmpty()) {
-            ipet.setCompoundDrawablesWithIntrinsicBounds(0, 0, R.drawable.ic_error_black_24dp, 0);
+            ipet.setCompoundDrawablesWithIntrinsicBounds( R.drawable.ic_error_black_24dp, 0,R.drawable.ic_crop_free_black_24dp, 0);
             ipl.setError("Field cannot be empty");
             ipl.setErrorEnabled(true);
             f++;
