@@ -4,10 +4,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
+import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
 import android.os.Bundle;
@@ -53,6 +55,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextInputEditText ipEditText, nameEditText, pNumberEditText;
     Button connectBtn, ipBtn;
     ImageView scannerView;
+    TextView toolbarTitleTextView1,toolbarTitleTextView2;
+    Toolbar toolbar1,toolbar2;
+
 
     ConstraintLayout firstLayout, thirdLayout;
     LinearLayout conversationLayout;
@@ -65,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     static final int MESSAGE_READ = 1;
     static final String TAG = "testWeChat";
     static final int port = 2907;
+    private static final int REQUEST_CALL = 1;
 
 
     //Objects
@@ -86,7 +92,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             if (msg.what == MESSAGE_READ) {
                 byte[] readBuff = (byte[]) msg.obj;
                 String tempMsg = new String(readBuff, 0, msg.arg1);
-                addMessage(Color.parseColor("#FFFFFF"), tempMsg);
+
+                String actualMessage = null;
+                try {
+                    actualMessage = aes.decrypt(tempMsg);
+
+                    if (actualMessage.contains("&&")) {
+                        String[] details = actualMessage.split("&&", 0);
+                        Log.d(TAG, "details[0]: " + details[0]);
+                        Log.d(TAG, "details[0]: " + details[1]);
+                        AppConstants.CONVERSATIONALIST_NAME = details[0];
+                        AppConstants.CONVERSATIONALIST_PHONE_NUMBER = details[1];
+                        Toast.makeText(MainActivity.this, AppConstants.CONVERSATIONALIST_NAME + "   " +
+                                                                        AppConstants.CONVERSATIONALIST_PHONE_NUMBER, Toast.LENGTH_SHORT).show();
+
+                        setSupportActionBar(toolbar2);
+                        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+                        if(!AppConstants.CONVERSATIONALIST_NAME.isEmpty()&& !AppConstants.CONVERSATIONALIST_NAME.equals("-1"))
+                        {
+                            toolbarTitleTextView2.setText(AppConstants.CONVERSATIONALIST_NAME);
+                        }
+
+                    } else
+                        addMessage(Color.parseColor("#FFFFFF"), tempMsg);
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
             }
             return true;
         }
@@ -124,8 +157,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         switch (item.getItemId()) {
 
             case R.id.profile:
-                if(profileDialog!=null)
-                profileDialog.showDialog();
+                if (profileDialog != null)
+                    profileDialog.showDialog();
                 return true;
 
             default:
@@ -143,6 +176,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         nameEditText = (TextInputEditText) findViewById(R.id.namet);
         pNumberEditText = (TextInputEditText) findViewById(R.id.numbert);
         scannerView = (ImageView) findViewById(R.id.scan_image);
+        toolbar1 = (Toolbar) findViewById(R.id.toolbar_1);
+        toolbarTitleTextView1=(TextView)findViewById(R.id.toolbar_title_1);
+
+        toolbar2 = (Toolbar) findViewById(R.id.toolbar_2);
+        toolbarTitleTextView2=(TextView)findViewById(R.id.toolbar_title_2);
+
+        setSupportActionBar(toolbar1);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
 
         if (appPreferences.containsKey(AppConstants.NAME))
             nameEditText.setText(appPreferences.getString(AppConstants.NAME));
@@ -155,13 +196,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         knowIPDialog = new KnowIPDialog(this);
-        profileDialog = new ProfileDialog(this);
+        profileDialog = new ProfileDialog(this,1);
 
-
+        toolbar2.setOnClickListener(this);
         connectBtn.setOnClickListener(this);
         scannerView.setOnClickListener(this);
         ipBtn.setOnClickListener(this);
-
 
         attachmentBtn = (ImageButton) findViewById(R.id.send_files_and_voice_btn);
         messageEditText = (EditText) findViewById(R.id.messageEditText);
@@ -189,10 +229,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.scan_image:
                 openScanner();
                 break;
+            case R.id.toolbar_2:
+                openConversationistDialog();
+                break;
             case R.id.send_message_btn:
                 sendMessage();
 
         }
+    }
+
+    private void openConversationistDialog() {
+        ProfileDialog profileDialog=new ProfileDialog(this,3);
+        profileDialog.showDialog();
     }
 
     private void openScanner() {
@@ -371,9 +419,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
                         String[] messages = actualMessage.split("@%@", 0);
-
-
-                        // else it's a normal message
                         Log.d(TAG, "messages[0]: " + messages[0]);
                         Log.d(TAG, "messages[0]: " + messages[1]);
 
@@ -389,7 +434,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         // adding 2 more views in linear layout every time
                         conversationLayout.addView(textView);
                         conversationLayout.addView(msgTime);
-                        conversations.post(() -> conversations.fullScroll(View.FOCUS_DOWN)); // for getting last message in first
+                        conversations.post(() -> conversations.fullScroll(View.FOCUS_DOWN));// for getting last message in first
+
+
+                        // else it's a normal message
+
 
                     } catch (Exception e) {
                         e.printStackTrace();
@@ -429,7 +478,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         appPreferences = AppPreferences.getAppPreferences(this);
-        Log.d("qwerty","here");
+        Log.d("qwerty", "here");
     }
 
 
@@ -498,6 +547,29 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 sendReceive.start();
                 showToast("Connected to other device. You can now exchange messages.");
 
+                String name = appPreferences.getString(AppConstants.NAME);
+                String phoneNumber = appPreferences.getString(AppConstants.PHONE_NUMBER);
+                String message = null;
+
+                if (name != null)
+                    message = name + "&&";
+                else message = "-1" + "&&";
+
+                if (phoneNumber != null)
+                    message = message + phoneNumber;
+                else message = message + "-1";
+
+                try {
+                    Log.d(TAG, "TRYING ENCRYPTION FOR : " + message);
+                    String encryptedData = aes.encrypt(message);
+                    //sending the encrypted data
+                    sendReceive.write(encryptedData);
+
+                } catch (Exception e) {
+                    Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
+                    e.printStackTrace();
+                }
+
                 Log.d(TAG, "Client is connected to server");
 
                 // enabling invisible components
@@ -561,6 +633,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             messageEditText.setText("");
                             messageEditText.requestFocus();
                             messageEditText.setSelection(0);
+                            messageEditText.setFocusableInTouchMode(true);
                         }
                     });
                 } catch (IOException e) {
@@ -570,6 +643,17 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 }
             }).start();
 
+        }
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        if (requestCode == REQUEST_CALL) {
+            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                ProfileDialog profileDialog=new ProfileDialog(this,3);
+                profileDialog.makePhoneCall();
+            } else
+                Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
         }
     }
 }

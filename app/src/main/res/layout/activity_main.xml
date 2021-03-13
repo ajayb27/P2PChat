@@ -7,12 +7,18 @@
     android:layout_height="match_parent"
     tools:context=".ui.MainActivity">
 
+
+
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:visibility="visible"
         tools:context=".ui.MainActivity">
+
+        <include
+            android:id="@+id/toolbar_1"
+            layout="@layout/toolbar_layout_1"/>
 
         <TextView
             android:id="@+id/textView"
@@ -28,7 +34,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@id/toolbar_1"/>
 
 
         <androidx.cardview.widget.CardView
@@ -266,6 +272,10 @@
         android:visibility="gone"
         tools:context=".ui.MainActivity">
 
+        <include
+            android:id="@+id/toolbar_2"
+            layout="@layout/toolbar_layout_2"/>
+
         <ScrollView
             android:id="@+id/conversations"
             android:layout_width="match_parent"
@@ -275,7 +285,7 @@
             app:layout_constraintBottom_toTopOf="@id/inner_layout"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@id/toolbar_2">
 
             <LinearLayout
                 android:id="@+id/scroll_view_linear_layout"
