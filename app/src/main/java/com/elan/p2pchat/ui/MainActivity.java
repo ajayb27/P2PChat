@@ -370,6 +370,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             msgTime.setTextSize(14);
                             msgTime.setTextColor(Color.parseColor("#FCE4EC"));
+                            msgTime.setTextColor(getResources().getColor(R.color.black));
                             msgTime.setTypeface(textView.getTypeface(), Typeface.ITALIC);
                             conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
                             msgTime.setGravity(Gravity.LEFT);
@@ -398,6 +399,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                             msgTime.setTextSize(14);
                             msgTime.setTextColor(Color.parseColor("#FFFFFF"));
+                            msgTime.setTextColor(getResources().getColor(R.color.black));
                             msgTime.setTypeface(textView.getTypeface(), Typeface.ITALIC);
                             conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
                             LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);

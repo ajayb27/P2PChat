@@ -269,6 +269,7 @@
         android:id="@+id/constraint_layout2"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#ECE5DD"
         android:visibility="gone"
         tools:context=".ui.MainActivity">
 
