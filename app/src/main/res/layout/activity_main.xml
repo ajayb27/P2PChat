@@ -8,7 +8,6 @@
     tools:context=".ui.MainActivity">
 
 
-
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/constraint_layout1"
         android:layout_width="match_parent"
@@ -18,7 +17,7 @@
 
         <include
             android:id="@+id/toolbar_1"
-            layout="@layout/toolbar_layout_1"/>
+            layout="@layout/toolbar_layout_1" />
 
         <TextView
             android:id="@+id/textView"
@@ -34,7 +33,7 @@
             android:textStyle="bold"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_1"/>
+            app:layout_constraintTop_toBottomOf="@id/toolbar_1" />
 
 
         <androidx.cardview.widget.CardView
@@ -71,10 +70,10 @@
                     app:boxCornerRadiusTopEnd="10dp"
                     app:boxCornerRadiusTopStart="10dp"
                     app:errorTextAppearance="@style/hintColor"
+                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintBottom_toBottomOf="parent">
+                    app:layout_constraintTop_toTopOf="parent">
 
                     <com.google.android.material.textfield.TextInputEditText
                         android:id="@+id/ipet"
@@ -97,8 +96,8 @@
                     android:layout_marginRight="20dp"
                     android:background="#fff"
                     android:src="@drawable/ic_crop_free_black_24dp"
-                    app:layout_constraintEnd_toEndOf="@id/iptf"
                     app:layout_constraintBottom_toBottomOf="@id/iptf"
+                    app:layout_constraintEnd_toEndOf="@id/iptf"
                     app:layout_constraintTop_toTopOf="@id/iptf" />
             </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.cardview.widget.CardView>
@@ -108,8 +107,8 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginLeft="20dp"
-            android:layout_marginRight="20dp"
             android:layout_marginTop="5dp"
+            android:layout_marginRight="20dp"
             android:gravity="center"
             android:text="YOUR DEtails"
             android:textAllCaps="true"
@@ -275,7 +274,7 @@
 
         <include
             android:id="@+id/toolbar_2"
-            layout="@layout/toolbar_layout_2"/>
+            layout="@layout/toolbar_layout_2" />
 
         <ScrollView
             android:id="@+id/conversations"
@@ -317,6 +316,7 @@
                 android:background="@drawable/file_send_shape"
                 android:backgroundTint="@color/gray"
                 android:src="@drawable/ic_insert"
+                android:visibility="gone"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
