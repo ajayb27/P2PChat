@@ -25,7 +25,7 @@ public class KnowIPDialog implements View.OnClickListener {
     private TextView textViewIP;
     private String ipAddress;
     private ImageView imageView;
-    private final static String NXTLINE = "\n\nOR\nSCAN THE CODE";
+    private final static String NXTLINE = "\nOR\nSCAN THE CODE";
 
     public KnowIPDialog(Activity activity) {
         this.activity = activity;

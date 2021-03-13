@@ -33,6 +33,7 @@
         android:textSize="20sp"
         android:textStyle="bold"
         android:textAllCaps="true"
+        android:lineSpacingExtra="8sp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="1.0"
         app:layout_constraintStart_toStartOf="parent"

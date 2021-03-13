@@ -134,12 +134,12 @@ public class ProfileDialog implements View.OnClickListener {
                     dialog.setNegativeButton("NO", new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialogInterface, int i) {
-                            alertDialog.dismiss();
                         }
+
                     });
 
-                    androidx.appcompat.app.AlertDialog alertDialog = dialog.create();
-                    alertDialog.show();
+                    androidx.appcompat.app.AlertDialog alertDialog1 = dialog.create();
+                    alertDialog1.show();
 
                 } else {
                     Toast.makeText(activity, "Cannot make this phone call", Toast.LENGTH_SHORT).show();
