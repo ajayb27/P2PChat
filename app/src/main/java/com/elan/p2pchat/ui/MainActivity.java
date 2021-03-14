@@ -436,6 +436,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     //Message UI handling
     private void addMessage(int color, String message) {
 
+        try {
+            if(aes.decrypt(message).contains("&&") || aes.decrypt(message).contains("&-&-&"))
+                return;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
         runOnUiThread(() -> {
                     TextView textView = new TextView(this);
                     TextView msgTime = new TextView(this);
