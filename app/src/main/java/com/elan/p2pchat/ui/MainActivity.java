@@ -223,33 +223,33 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    @SuppressLint("RestrictedApi")
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        MenuInflater menuInflater = getMenuInflater();
-        menuInflater.inflate(R.menu.menu, menu);
-        if (menu instanceof MenuBuilder) {
-            MenuBuilder menuBuilder = (MenuBuilder) menu;
-            menuBuilder.setOptionalIconsVisible(true);
-        }
-        return true;
-    }
+//    @SuppressLint("RestrictedApi")
+//    @Override
+//    public boolean onCreateOptionsMenu(Menu menu) {
+//        MenuInflater menuInflater = getMenuInflater();
+//        menuInflater.inflate(R.menu.menu, menu);
+//        if (menu instanceof MenuBuilder) {
+//            MenuBuilder menuBuilder = (MenuBuilder) menu;
+//            menuBuilder.setOptionalIconsVisible(true);
+//        }
+//        return true;
+//    }
 
-    @Override
-    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-
-        switch (item.getItemId()) {
-
-            case R.id.profile:
-                if (profileDialog != null)
-                    profileDialog.showDialog();
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-
-        }
-    }
+//    @Override
+//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
+//
+//        switch (item.getItemId()) {
+//
+//            case R.id.profile:
+//                if (profileDialog != null)
+//                    profileDialog.showDialog();
+//                return true;
+//
+//            default:
+//                return super.onOptionsItemSelected(item);
+//
+//        }
+//    }
 
     private void iniView() {
 
@@ -303,18 +303,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         editFocus = false;
 
-        messageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-            @Override
-            public void onFocusChange(View v, boolean hasFocus) {
-
-                if(!hasFocus) {
-//                    v.setEnabled(true);
-//                    Toast.makeText(MainActivity.this,"requesting focus",Toast.LENGTH_SHORT).show();
-                } else {
-//                    Toast.makeText(MainActivity.this,"Focused",Toast.LENGTH_SHORT).show();
-                }
-            }
-        });
+//        messageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+//            @Override
+//            public void onFocusChange(View v, boolean hasFocus) {
+//
+//                if(!hasFocus) {
+////                    v.setEnabled(true);
+////                    Toast.makeText(MainActivity.this,"requesting focus",Toast.LENGTH_SHORT).show();
+//                } else {
+////                    Toast.makeText(MainActivity.this,"Focused",Toast.LENGTH_SHORT).show();
+//                }
+//            }
+//        });
 
     }
 
