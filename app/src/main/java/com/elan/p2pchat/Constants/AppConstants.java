@@ -7,6 +7,5 @@ public class AppConstants {
 
     public static String CONVERSATIONALIST_NAME="";
     public static String CONVERSATIONALIST_PHONE_NUMBER="";
-//    public static String SELF_IP = "";
 
 }

@@ -2,7 +2,6 @@ package com.elan.p2pchat.ui.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Intent;
 import android.graphics.Bitmap;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,7 +11,6 @@ import android.widget.TextView;
 
 import com.elan.p2pchat.R;
 import com.elan.p2pchat.Utils.Utils;
-import com.elan.p2pchat.ui.QRGenerator;
 
 import androidmads.library.qrgenearator.QRGContents;
 import androidmads.library.qrgenearator.QRGEncoder;

@@ -6,7 +6,6 @@ import android.content.SharedPreferences;
 public class AppPreferences {
 
     private SharedPreferences prefs;
-    private Context context;
     private static AppPreferences appPreferences;
     private SharedPreferences.Editor editor;
 
@@ -26,15 +25,6 @@ public class AppPreferences {
         editor.commit();
     }
 
-    public void insertBoolean(String key,boolean value) {
-        editor.putBoolean(key,value);
-        editor.commit();
-    }
-
-    public boolean getBoolean(String key) {
-        return prefs.getBoolean(key,false);
-    }
-
     public String getString(String key) {
         return prefs.getString(key,"");
     }
@@ -47,10 +37,5 @@ public class AppPreferences {
         editor = null;
         prefs = null;
         appPreferences = null;
-    }
-
-    public void deleteValue(String key) {
-        editor.remove(key);
-        editor.commit();
     }
 }

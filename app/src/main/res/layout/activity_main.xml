@@ -229,19 +229,6 @@
             app:layout_constraintStart_toStartOf="@id/card_details"
             app:layout_constraintTop_toBottomOf="@id/card_details" />
 
-        <!--    <TextView-->
-        <!--        android:id="@+id/ipText"-->
-        <!--        android:layout_width="0dp"-->
-        <!--        android:layout_height="wrap_content"-->
-        <!--        android:text="want to know your ip ?"-->
-        <!--        android:textAllCaps="true"-->
-        <!--        app:layout_constraintTop_toBottomOf="@id/connectBtn"-->
-        <!--        app:layout_constraintStart_toStartOf="parent"-->
-        <!--        app:layout_constraintEnd_toEndOf="parent"-->
-        <!--        android:gravity="center"-->
-        <!--        android:layout_margin="20dp"-->
-        <!--        android:textSize="15sp"-->
-        <!--        android:textStyle="bold"/>-->
 
         <Button
             android:id="@+id/getIpBtn"

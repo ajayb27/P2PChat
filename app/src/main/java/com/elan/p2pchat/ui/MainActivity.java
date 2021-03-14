@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.Gravity;
 import android.view.View;
 import android.widget.Button;
@@ -63,7 +62,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton sendButton, videoBtn;
     ScrollView conversations;
 
-    boolean editFocus;
 
     //Constants
     static final int MESSAGE_READ = 1;
@@ -82,7 +80,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Dialogs
     KnowIPDialog knowIPDialog;
-//    ProfileDialog profileDialog;
 
 
     Handler handler = new Handler(new Handler.Callback() {
@@ -200,34 +197,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-//    @SuppressLint("RestrictedApi")
-//    @Override
-//    public boolean onCreateOptionsMenu(Menu menu) {
-//        MenuInflater menuInflater = getMenuInflater();
-//        menuInflater.inflate(R.menu.menu, menu);
-//        if (menu instanceof MenuBuilder) {
-//            MenuBuilder menuBuilder = (MenuBuilder) menu;
-//            menuBuilder.setOptionalIconsVisible(true);
-//        }
-//        return true;
-//    }
-
-//    @Override
-//    public boolean onOptionsItemSelected(@NonNull MenuItem item) {
-//
-//        switch (item.getItemId()) {
-//
-//            case R.id.profile:
-//                if (profileDialog != null)
-//                    profileDialog.showDialog();
-//                return true;
-//
-//            default:
-//                return super.onOptionsItemSelected(item);
-//
-//        }
-//    }
-
     private void iniView() {
 
         ipLayout = (TextInputLayout) findViewById(R.id.iptf);
@@ -276,22 +245,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         thirdLayout = (ConstraintLayout) findViewById(R.id.constraint_layout2);
 
         sendButton.setOnClickListener(this);
-//        attachmentBtn.setOnClickListener(this);
-
-        editFocus = false;
-
-//        messageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
-//            @Override
-//            public void onFocusChange(View v, boolean hasFocus) {
-//
-//                if(!hasFocus) {
-////                    v.setEnabled(true);
-////                    Toast.makeText(MainActivity.this,"requesting focus",Toast.LENGTH_SHORT).show();
-//                } else {
-////                    Toast.makeText(MainActivity.this,"Focused",Toast.LENGTH_SHORT).show();
-//                }
-//            }
-//        });
 
     }
 
@@ -308,7 +261,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 openScanner();
                 break;
             case R.id.toolbar_2:
-                openConversationistDialog();
+                openConversationDialog();
                 break;
             case R.id.video_btn:
                 openVideo();
@@ -337,7 +290,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     }
 
-    private void openConversationistDialog() {
+    private void openConversationDialog() {
         ProfileDialog profileDialog = new ProfileDialog(this, 3);
         profileDialog.showDialog();
     }
@@ -456,17 +409,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 && !(aes.decrypt(message).contains("file@%@"))
                                 && !(aes.decrypt(message).contains("remove@%@"))) {
                             textView.setPadding(200, 20, 20, 20);
-                            //textView.setMaxLines(5);
                             textView.setGravity(Gravity.RIGHT);
                             textView.setBackgroundResource(R.drawable.sender_messages_layout);
                             textView.setTextIsSelectable(true);
 
                             LinearLayout.LayoutParams lp1 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            // lp1.setMargins(10, 10, 10, 10);
-                            // lp1.setMargins(10, 10, 10, 10);
-                            //lp1.width = 400;
                             lp1.leftMargin = 200;
-                            //lp1.rightMargin = 50;
+
                             textView.setLayoutParams(lp1);
 
                             msgTime.setPadding(0, 0, 0, 0);
@@ -488,15 +437,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 && !(aes.decrypt(message).contains("file@%@"))
                                 && !(aes.decrypt(message).contains("remove@%@"))) {
                             textView.setPadding(20, 20, 200, 20);
-                            //textView.setMaxLines(5);
                             textView.setGravity(Gravity.LEFT);
                             textView.setBackgroundResource(R.drawable.receiver_messages_layout);
                             textView.setTextIsSelectable(true);
 
                             LinearLayout.LayoutParams lp2 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            //lp1.setMargins(10, 10, 10, 10);
-                            //lp1.width = 400;
-                            //lp1.leftMargin = 150;
                             lp2.rightMargin = 200;
                             textView.setLayoutParams(lp2);
 
@@ -506,9 +451,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                             msgTime.setTypeface(textView.getTypeface(), Typeface.ITALIC);
                             conversationLayout.setGravity(View.TEXT_ALIGNMENT_CENTER);
                             LinearLayout.LayoutParams lp3 = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.WRAP_CONTENT);
-                            //lp1.setMargins(10, 10, 10, 10);
-                            //lp1.width = 400;
-                            //lp1.leftMargin = 150;
                             lp3.rightMargin = 200;
                             msgTime.setGravity(Gravity.RIGHT);
                             msgTime.setLayoutParams(lp3);
@@ -535,8 +477,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         conversationLayout.addView(textView);
                         conversationLayout.addView(msgTime);
                         conversations.post(() -> conversations.fullScroll(View.FOCUS_DOWN));// for getting last message in first
-
-                        // else it's a normal message
 
 
                     } catch (Exception e) {
@@ -722,22 +662,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 try {
                     outputStream.write(msg.getBytes());
                     addMessage(Color.parseColor("#FCE4EC"), msg);
-//                    runOnUiThread(() ->
-//                            messageEditText.setText("")
-//
-//                    );
                     runOnUiThread(new Runnable() {
-//                        @RequiresApi(api = Build.VERSION_CODES.P)
                         @Override
                         public void run() {
                             messageEditText.setText("");
-                            editFocus = false;
-//                            messageEditText.resetPivot();
-//                            messageEditText.restoreDefaultFocus();
-////                            messageEditText.setSelection(0);
-////                            messageEditText.setCursorVisible(true);
-//                            messageEditText.requestFocus();
-
                         }
                     });
                 } catch (IOException e) {

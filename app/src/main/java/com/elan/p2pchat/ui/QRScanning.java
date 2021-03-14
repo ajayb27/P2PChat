@@ -72,23 +72,6 @@ public class QRScanning extends AppCompatActivity {
         } else {
             codeScanner.startPreview();
         }
-//        Dexter.withContext(this).withPermission(Manifest.permission.CAMERA).withListener(new PermissionListener() {
-//            @Override
-//            public void onPermissionGranted(PermissionGrantedResponse permissionGrantedResponse) {
-//                codeScanner.startPreview();
-//            }
-//
-//            @Override
-//            public void onPermissionDenied(PermissionDeniedResponse permissionDeniedResponse) {
-//                Toast.makeText(QRScanning.this, "Camera permission is required", Toast.LENGTH_SHORT).show();
-//                onBackPressed();
-//            }
-//
-//            @Override
-//            public void onPermissionRationaleShouldBeShown(PermissionRequest permissionRequest, PermissionToken permissionToken) {
-//                onBackPressed();
-//            }
-//        }).check();
     }
 
     @Override
