@@ -2,12 +2,15 @@ package com.elan.p2pchat.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
@@ -16,6 +19,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
+import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
@@ -23,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -438,7 +443,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         conversationLayout.addView(msgTime);
                         conversations.post(() -> conversations.fullScroll(View.FOCUS_DOWN));// for getting last message in first
 
-
                         // else it's a normal message
 
 
@@ -633,9 +637,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         @Override
                         public void run() {
                             messageEditText.setText("");
-                            messageEditText.requestFocus();
                             messageEditText.setSelection(0);
-                            messageEditText.setFocusableInTouchMode(true);
+                            messageEditText.setCursorVisible(true);
+                            messageEditText.requestFocus();
+
                         }
                     });
                 } catch (IOException e) {
@@ -657,5 +662,28 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } else
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        final AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        builder.setMessage("Are you sure you want to exit ?");
+        builder.setCancelable(true);
+        builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                dialogInterface.cancel();
+            }
+        });
+
+        builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                finish();
+            }
+        });
+
+        AlertDialog alertDialog=builder.create();
+        alertDialog.show();
     }
 }
