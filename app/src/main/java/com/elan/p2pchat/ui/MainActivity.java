@@ -2,6 +2,7 @@ package com.elan.p2pchat.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.menu.MenuBuilder;
@@ -9,12 +10,14 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import android.annotation.SuppressLint;
+import android.app.Service;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -23,10 +26,12 @@ import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
+import android.view.KeyEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
@@ -72,6 +77,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     ImageButton sendButton, videoBtn;
     ScrollView conversations;
 
+    boolean editFocus;
 
     //Constants
     static final int MESSAGE_READ = 1;
@@ -295,6 +301,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         sendButton.setOnClickListener(this);
 //        attachmentBtn.setOnClickListener(this);
 
+        editFocus = false;
+
+        messageEditText.setOnFocusChangeListener(new View.OnFocusChangeListener() {
+            @Override
+            public void onFocusChange(View v, boolean hasFocus) {
+
+                if(!hasFocus) {
+//                    v.setEnabled(true);
+//                    Toast.makeText(MainActivity.this,"requesting focus",Toast.LENGTH_SHORT).show();
+                } else {
+//                    Toast.makeText(MainActivity.this,"Focused",Toast.LENGTH_SHORT).show();
+                }
+            }
+        });
+
     }
 
     @Override
@@ -316,7 +337,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 openVideo();
                 break;
             case R.id.send_message_btn:
+                messageEditText.setFocusableInTouchMode(true);
+                messageEditText.setFocusable(true);
                 sendMessage();
+                break;
 
         }
     }
@@ -729,12 +753,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 //
 //                    );
                     runOnUiThread(new Runnable() {
+//                        @RequiresApi(api = Build.VERSION_CODES.P)
                         @Override
                         public void run() {
                             messageEditText.setText("");
-                            messageEditText.setSelection(0);
-                            messageEditText.setCursorVisible(true);
-                            messageEditText.requestFocus();
+                            editFocus = false;
+//                            messageEditText.resetPivot();
+//                            messageEditText.restoreDefaultFocus();
+////                            messageEditText.setSelection(0);
+////                            messageEditText.setCursorVisible(true);
+//                            messageEditText.requestFocus();
 
                         }
                     });
