@@ -431,7 +431,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         try {
             clientClass = new ClientClass(targetIpAddress, port);
             clientClass.start();
-            Toast.makeText(this, "Your sending port and listening port have been set successfully", Toast.LENGTH_SHORT).show();
         } catch (Exception e) {
             Toast.makeText(this, "ERROR : " + e.getMessage(), Toast.LENGTH_SHORT).show();
         }
@@ -691,6 +690,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     sendReceive.write(encryptedData);
 
                 } catch (Exception e) {
+                    runOnUiThread(()->
+                            Toast.makeText(MainActivity.this,"User left",Toast.LENGTH_SHORT).show()
+                    );
                     Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
                     e.printStackTrace();
                 }
@@ -702,7 +704,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             } catch (IOException e) {
                 e.printStackTrace();
                 Log.d(TAG, "Can't connect to server. Check the IP address and Port number and try again: " + e);
+                runOnUiThread(()->
+                        Toast.makeText(MainActivity.this,"Cannot connect at the moment",Toast.LENGTH_SHORT).show()
+                );
             } catch (Exception e) {
+                runOnUiThread(()->
+                        Toast.makeText(MainActivity.this,"Cannot connect at the moment",Toast.LENGTH_SHORT).show()
+                );
                 Log.d(TAG, "ERROR: " + e);
             }
         }
@@ -768,8 +776,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     });
                 } catch (IOException e) {
                     Log.d(TAG, "Can't send message: " + e);
+                    runOnUiThread(()->
+                        Toast.makeText(MainActivity.this,"User left",Toast.LENGTH_SHORT).show()
+                    );
                 } catch (Exception e) {
                     Log.d(TAG, "Error: " + e);
+                    runOnUiThread(()->
+                            Toast.makeText(MainActivity.this,"User left",Toast.LENGTH_SHORT).show()
+                    );
                 }
             }).start();
 
