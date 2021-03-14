@@ -1,7 +1,7 @@
 # U-MEssenger
 #### Peer to peer chat app
 
-### Introducton
+### Introduction
 The U-MEssenger is a peer to peer connecting android app that facilitates the users to connect through text, voice call and video call. The prerequisite is that the users must be connected over the same network.
 
 ### Built with
@@ -15,8 +15,13 @@ To run this project on the linux operating systems, follow the below steps.
 2. Get the project by cloning the repository from the below given link :
 https://github.com/ajayb27/P2PChat.git
 Or
-Download the project zip folder. 
+Download and import the project zip folder. 
 3. Run the project 
 
 ### APIs and Libraries
 The open sources used in this project are QrGenerator(MIT license), CodeScanner(MIT license), Jitsi open source software (Apache license).
+
+
+
+### Features
+
