@@ -39,6 +39,7 @@ public class ProfileDialog implements View.OnClickListener {
     //type=1 view
     //type=2 edit
     //type=3 sender
+    //type=4 non-editable profile
 
     public ProfileDialog(Activity activity, int type) {
         this.activity = activity;
@@ -70,7 +71,7 @@ public class ProfileDialog implements View.OnClickListener {
     }
 
     public void showDialog() {
-        if (type == 1 || type == 2) {
+        if (type == 1 || type == 2 || type == 4) {
 
             appPreferences = AppPreferences.getAppPreferences(activity);
             if (appPreferences.containsKey(AppConstants.NAME))
@@ -120,7 +121,7 @@ public class ProfileDialog implements View.OnClickListener {
                 appPreferences.insertString(AppConstants.PHONE_NUMBER, number);
 
                 Toast.makeText(activity, "Details saved", Toast.LENGTH_SHORT).show();
-            } else {
+            } else if (type == 3) {
                 if (!AppConstants.CONVERSATIONALIST_PHONE_NUMBER.isEmpty() && !AppConstants.CONVERSATIONALIST_PHONE_NUMBER.equals("-1")) {
                     androidx.appcompat.app.AlertDialog.Builder dialog = new androidx.appcompat.app.AlertDialog.Builder(activity);
                     dialog.setMessage("Are you sure you want to make this call ???");
@@ -146,6 +147,10 @@ public class ProfileDialog implements View.OnClickListener {
                 }
 
             }
+            else
+            {
+                Toast.makeText(activity, "Cannot edit while connection is established.", Toast.LENGTH_SHORT).show();
+            }
         }
     }
 
@@ -157,15 +162,5 @@ public class ProfileDialog implements View.OnClickListener {
             activity.startActivity(new Intent(Intent.ACTION_CALL, Uri.parse(dial)));
         }
     }
-
-//    @Override
-//    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
-//        if (requestCode == REQUEST_CALL) {
-//            if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-//                makePhoneCall();
-//            } else
-//                Toast.makeText(activity, "Permission Denied", Toast.LENGTH_SHORT).show();
-//        }
-//    }
 
 }

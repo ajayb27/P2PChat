@@ -84,6 +84,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     static final String TAG = "testWeChat";
     static final int port = 2907;
     private static final int REQUEST_CALL = 1;
+    int connectionEstablished=1;
 
 
     //Objects
@@ -282,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         knowIPDialog = new KnowIPDialog(this);
-        profileDialog = new ProfileDialog(this, 1);
+        profileDialog = new ProfileDialog(this, connectionEstablished);
 
         toolbar2.setOnClickListener(this);
         connectBtn.setOnClickListener(this);
@@ -670,6 +671,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 sendReceive = new SendReceive(socket);
                 sendReceive.start();
                 showToast("Connected to other device. You can now exchange messages.");
+                connectionEstablished=4;
 
                 String name = appPreferences.getString(AppConstants.NAME);
                 String phoneNumber = appPreferences.getString(AppConstants.PHONE_NUMBER);
