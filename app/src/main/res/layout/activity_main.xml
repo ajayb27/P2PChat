@@ -12,7 +12,7 @@
         android:id="@+id/constraint_layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:context=".ui.MainActivity">
 
         <include
@@ -269,7 +269,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffed"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:context=".ui.MainActivity">
 
         <include
@@ -308,7 +308,7 @@
             app:layout_constraintStart_toStartOf="parent">
 
             <ImageButton
-                android:id="@+id/send_files_and_voice_btn"
+                android:id="@+id/video_btn"
                 android:layout_width="55dp"
                 android:layout_height="50dp"
                 android:layout_marginStart="5dp"
@@ -336,10 +336,10 @@
                 android:maxLines="5"
                 android:padding="10dp"
                 android:textCursorDrawable="@null"
-                app:layout_constraintBottom_toBottomOf="@id/send_files_and_voice_btn"
+                app:layout_constraintBottom_toBottomOf="@id/video_btn"
                 app:layout_constraintEnd_toStartOf="@id/send_message_btn"
-                app:layout_constraintStart_toEndOf="@id/send_files_and_voice_btn"
-                app:layout_constraintTop_toTopOf="@id/send_files_and_voice_btn" />
+                app:layout_constraintStart_toEndOf="@id/video_btn"
+                app:layout_constraintTop_toTopOf="@id/video_btn" />
 
             <ImageButton
                 android:id="@+id/send_message_btn"
@@ -349,9 +349,9 @@
                 android:background="@drawable/file_send_shape"
                 android:backgroundTint="@color/gray"
                 android:src="@drawable/ic_send"
-                app:layout_constraintBottom_toBottomOf="@id/send_files_and_voice_btn"
+                app:layout_constraintBottom_toBottomOf="@id/video_btn"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="@id/send_files_and_voice_btn" />
+                app:layout_constraintTop_toTopOf="@id/video_btn" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

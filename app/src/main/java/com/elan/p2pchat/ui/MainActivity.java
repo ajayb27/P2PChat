@@ -47,6 +47,9 @@ import com.elan.p2pchat.ui.dialogs.ProfileDialog;
 import com.google.android.material.textfield.TextInputEditText;
 import com.google.android.material.textfield.TextInputLayout;
 
+import org.jitsi.meet.sdk.JitsiMeetActivity;
+import org.jitsi.meet.sdk.JitsiMeetConferenceOptions;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
@@ -60,14 +63,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     TextInputEditText ipEditText, nameEditText, pNumberEditText;
     Button connectBtn, ipBtn;
     ImageView scannerView;
-    TextView toolbarTitleTextView1,toolbarTitleTextView2;
-    Toolbar toolbar1,toolbar2;
-
+    TextView toolbarTitleTextView1, toolbarTitleTextView2;
+    Toolbar toolbar1, toolbar2;
 
     ConstraintLayout firstLayout, thirdLayout;
     LinearLayout conversationLayout;
     EditText messageEditText;
-    ImageButton sendButton, attachmentBtn;
+    ImageButton sendButton, videoBtn;
     ScrollView conversations;
 
 
@@ -114,11 +116,82 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         setSupportActionBar(toolbar2);
                         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
-                        if(!AppConstants.CONVERSATIONALIST_NAME.isEmpty()&& !AppConstants.CONVERSATIONALIST_NAME.equals("-1"))
-                        {
+                        if (!AppConstants.CONVERSATIONALIST_NAME.isEmpty() && !AppConstants.CONVERSATIONALIST_NAME.equals("-1")) {
                             toolbarTitleTextView2.setText(AppConstants.CONVERSATIONALIST_NAME);
                         }
 
+                    } else if (actualMessage.contains("&-&-&")) {
+                        String[] details = actualMessage.split("&-&-&", 0);
+                        Log.d(TAG, "type: " + details[0]);
+                        Log.d(TAG, "room: " + details[1]);
+
+                        if (details[0].equals("request")) {
+                            final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
+                            builder.setMessage("Conversationalist wants to start a video call. \n\nAre you accepting the request ?");
+                            builder.setCancelable(true);
+                            builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String message = "response&-&-&" + "no";
+
+                                    try {
+                                        Log.d(TAG, "TRYING ENCRYPTION FOR : " + message);
+                                        String encryptedData = aes.encrypt(message);
+                                        //sending the encrypted data
+                                        sendReceive.write(encryptedData);
+
+                                    } catch (Exception e) {
+                                        Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
+                                        e.printStackTrace();
+                                    }
+
+                                    dialogInterface.cancel();
+                                }
+                            });
+
+                            builder.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                                @Override
+                                public void onClick(DialogInterface dialogInterface, int i) {
+                                    String message = "response&-&-&" + "yes";
+
+                                    try {
+                                        Log.d(TAG, "TRYING ENCRYPTION FOR : " + message);
+                                        String encryptedData = aes.encrypt(message);
+                                        //sending the encrypted data
+                                        sendReceive.write(encryptedData);
+
+                                        JitsiMeetConferenceOptions jitsiMeetConferenceOptions = new JitsiMeetConferenceOptions.Builder()
+                                                .setRoom(details[1])
+                                                .setWelcomePageEnabled(false)
+                                                .setAudioMuted(false)
+                                                .setVideoMuted(false)
+                                                .setAudioOnly(false)
+                                                .build();
+                                        JitsiMeetActivity.launch(MainActivity.this, jitsiMeetConferenceOptions);
+
+                                    } catch (Exception e) {
+                                        Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
+                                        e.printStackTrace();
+                                    }
+                                    dialogInterface.cancel();
+                                }
+                            });
+
+                            AlertDialog alertDialog = builder.create();
+                            alertDialog.show();
+                        } else if (details[0].equals("response")) {
+                            if (details[1].equals("yes")) {
+                                JitsiMeetConferenceOptions jitsiMeetConferenceOptions = new JitsiMeetConferenceOptions.Builder()
+                                        .setRoom(Utils.getIPAddress(true))
+                                        .setWelcomePageEnabled(false)
+                                        .setAudioMuted(false)
+                                        .setVideoMuted(false)
+                                        .setAudioOnly(false)
+                                        .build();
+                                JitsiMeetActivity.launch(MainActivity.this, jitsiMeetConferenceOptions);
+                            } else
+                                Toast.makeText(MainActivity.this, "Video call request denied", Toast.LENGTH_SHORT).show();
+                        }
                     } else
                         addMessage(Color.parseColor("#FFFFFF"), tempMsg);
 
@@ -168,6 +241,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             default:
                 return super.onOptionsItemSelected(item);
+
         }
     }
 
@@ -182,10 +256,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         pNumberEditText = (TextInputEditText) findViewById(R.id.numbert);
         scannerView = (ImageView) findViewById(R.id.scan_image);
         toolbar1 = (Toolbar) findViewById(R.id.toolbar_1);
-        toolbarTitleTextView1=(TextView)findViewById(R.id.toolbar_title_1);
+        toolbarTitleTextView1 = (TextView) findViewById(R.id.toolbar_title_1);
+        videoBtn = (ImageButton) findViewById(R.id.video_btn);
 
         toolbar2 = (Toolbar) findViewById(R.id.toolbar_2);
-        toolbarTitleTextView2=(TextView)findViewById(R.id.toolbar_title_2);
+        toolbarTitleTextView2 = (TextView) findViewById(R.id.toolbar_title_2);
 
         setSupportActionBar(toolbar1);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -201,14 +276,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         knowIPDialog = new KnowIPDialog(this);
-        profileDialog = new ProfileDialog(this,1);
+        profileDialog = new ProfileDialog(this, 1);
 
         toolbar2.setOnClickListener(this);
         connectBtn.setOnClickListener(this);
         scannerView.setOnClickListener(this);
         ipBtn.setOnClickListener(this);
+        videoBtn.setOnClickListener(this);
 
-        attachmentBtn = (ImageButton) findViewById(R.id.send_files_and_voice_btn);
         messageEditText = (EditText) findViewById(R.id.messageEditText);
         sendButton = (ImageButton) findViewById(R.id.send_message_btn);
         conversations = findViewById(R.id.conversations);
@@ -218,7 +293,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         thirdLayout = (ConstraintLayout) findViewById(R.id.constraint_layout2);
 
         sendButton.setOnClickListener(this);
-        attachmentBtn.setOnClickListener(this);
+//        attachmentBtn.setOnClickListener(this);
 
     }
 
@@ -237,14 +312,34 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             case R.id.toolbar_2:
                 openConversationistDialog();
                 break;
+            case R.id.video_btn:
+                openVideo();
+                break;
             case R.id.send_message_btn:
                 sendMessage();
 
         }
     }
 
+    private void openVideo() {
+        String message = "request&-&-&" + Utils.getIPAddress(true);
+
+        try {
+            Log.d(TAG, "TRYING ENCRYPTION FOR : " + message);
+            String encryptedData = aes.encrypt(message);
+            //sending the encrypted data
+            sendReceive.write(encryptedData);
+
+        } catch (Exception e) {
+            Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
+            e.printStackTrace();
+        }
+
+
+    }
+
     private void openConversationistDialog() {
-        ProfileDialog profileDialog=new ProfileDialog(this,3);
+        ProfileDialog profileDialog = new ProfileDialog(this, 3);
         profileDialog.showDialog();
     }
 
@@ -657,7 +752,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         if (requestCode == REQUEST_CALL) {
             if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-                ProfileDialog profileDialog=new ProfileDialog(this,3);
+                ProfileDialog profileDialog = new ProfileDialog(this, 3);
                 profileDialog.makePhoneCall();
             } else
                 Toast.makeText(this, "Permission Denied", Toast.LENGTH_SHORT).show();
@@ -666,7 +761,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     @Override
     public void onBackPressed() {
-        final AlertDialog.Builder builder=new AlertDialog.Builder(MainActivity.this);
+        final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
         builder.setMessage("Are you sure you want to exit ?");
         builder.setCancelable(true);
         builder.setNegativeButton("No", new DialogInterface.OnClickListener() {
@@ -683,7 +778,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             }
         });
 
-        AlertDialog alertDialog=builder.create();
+        AlertDialog alertDialog = builder.create();
         alertDialog.show();
     }
 }
