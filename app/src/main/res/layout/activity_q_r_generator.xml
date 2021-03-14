@@ -16,7 +16,7 @@
         android:gravity="center"
         android:text="Your ip address: "
         android:textAllCaps="true"
-        android:textColor="@color/colorPrimary"
+        android:textColor="@color/violet"
         android:textSize="25sp"
         android:textStyle="bold"
         android:lineSpacingExtra="5sp"

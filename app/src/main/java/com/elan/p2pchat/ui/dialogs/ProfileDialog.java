@@ -79,7 +79,7 @@ public class ProfileDialog implements View.OnClickListener {
             if (appPreferences.containsKey(AppConstants.PHONE_NUMBER))
                 pNumberEditText.setText(appPreferences.getString(AppConstants.PHONE_NUMBER));
         } else {
-            title.setText("YOUR CONVERSATIONALIST DETAILS");
+            title.setText("YOUR SENDER DETAILS");
             btn.setText("CALL");
             if (!AppConstants.CONVERSATIONALIST_NAME.equals("-1"))
                 nameEditText.setText(AppConstants.CONVERSATIONALIST_NAME);

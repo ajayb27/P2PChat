@@ -3,7 +3,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:background="@color/colorPrimary"
+    android:background="@color/blue"
     android:theme="@style/ThemeOverlay.AppCompat.Dark"
     android:elevation="5dp">
 
@@ -14,6 +14,6 @@
         android:id="@+id/toolbar_title_1"
         android:textSize="20sp"
         android:textStyle="bold"
-        android:textColor="#ffffff"/>
+        android:textColor="#fff"/>
 
 </androidx.appcompat.widget.Toolbar>

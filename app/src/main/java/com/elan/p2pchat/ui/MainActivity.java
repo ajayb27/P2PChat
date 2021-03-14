@@ -108,8 +108,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         Log.d(TAG, "details[0]: " + details[1]);
                         AppConstants.CONVERSATIONALIST_NAME = details[0];
                         AppConstants.CONVERSATIONALIST_PHONE_NUMBER = details[1];
-                        Toast.makeText(MainActivity.this, AppConstants.CONVERSATIONALIST_NAME + "   " +
-                                                                        AppConstants.CONVERSATIONALIST_PHONE_NUMBER, Toast.LENGTH_SHORT).show();
+//                        Toast.makeText(MainActivity.this, AppConstants.CONVERSATIONALIST_NAME + "   " +
+//                                                                        AppConstants.CONVERSATIONALIST_PHONE_NUMBER, Toast.LENGTH_SHORT).show();
 
                         setSupportActionBar(toolbar2);
                         getSupportActionBar().setDisplayShowTitleEnabled(false);
@@ -357,7 +357,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 && !(aes.decrypt(message).contains("diconnect@%@d"))
                                 && !(aes.decrypt(message).contains("file@%@"))
                                 && !(aes.decrypt(message).contains("remove@%@"))) {
-                            textView.setPadding(200, 20, 10, 10);
+                            textView.setPadding(200, 20, 20, 20);
                             //textView.setMaxLines(5);
                             textView.setGravity(Gravity.RIGHT);
                             textView.setBackgroundResource(R.drawable.sender_messages_layout);
@@ -389,7 +389,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                 && !(aes.decrypt(message).contains("diconnect@%@d"))
                                 && !(aes.decrypt(message).contains("file@%@"))
                                 && !(aes.decrypt(message).contains("remove@%@"))) {
-                            textView.setPadding(10, 20, 200, 10);
+                            textView.setPadding(20, 20, 200, 20);
                             //textView.setMaxLines(5);
                             textView.setGravity(Gravity.LEFT);
                             textView.setBackgroundResource(R.drawable.receiver_messages_layout);
