@@ -12,7 +12,7 @@
         android:id="@+id/constraint_layout1"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:visibility="visible"
+        android:visibility="gone"
         tools:context=".ui.MainActivity">
 
         <include
@@ -269,7 +269,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="#ffffed"
-        android:visibility="gone"
+        android:visibility="visible"
         tools:context=".ui.MainActivity">
 
         <include
@@ -315,8 +315,8 @@
                 android:layout_marginBottom="10dp"
                 android:background="@drawable/file_send_shape"
                 android:backgroundTint="@color/gray"
-                android:src="@drawable/ic_insert"
-                android:visibility="gone"
+                android:src="@drawable/ic_video"
+                android:visibility="visible"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -329,12 +329,12 @@
                 android:layout_marginStart="3dp"
                 android:layout_marginEnd="3dp"
                 android:background="@drawable/edit_text_bg2"
+                android:cursorVisible="true"
+                android:focusable="true"
+                android:focusableInTouchMode="true"
                 android:hint="Type message here..."
                 android:maxLines="5"
                 android:padding="10dp"
-                android:focusable="true"
-                android:focusableInTouchMode="true"
-                android:cursorVisible="true"
                 android:textCursorDrawable="@null"
                 app:layout_constraintBottom_toBottomOf="@id/send_files_and_voice_btn"
                 app:layout_constraintEnd_toStartOf="@id/send_message_btn"
