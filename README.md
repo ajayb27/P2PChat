@@ -4,6 +4,9 @@
 ### Introduction
 The U-MEssenger is a peer to peer connecting android app that facilitates the users to connect through text, voice call and video call. The prerequisite is that the users must be connected over the same network.
 
+### APK
+Download apk here https://drive.google.com/file/d/1scsMSYL2TZb-4NhB6A0EH8hMzovZXjWJ/view?usp=sharing
+
 ### Built with
 The U-MEssenger is built on the Android studio platform and programmed in Java language <b>[JAVA 8]</b> .
 
