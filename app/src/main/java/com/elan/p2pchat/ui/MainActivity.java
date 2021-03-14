@@ -96,7 +96,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     //Dialogs
     KnowIPDialog knowIPDialog;
-    ProfileDialog profileDialog;
+//    ProfileDialog profileDialog;
 
 
     Handler handler = new Handler(new Handler.Callback() {
@@ -283,7 +283,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
 
         knowIPDialog = new KnowIPDialog(this);
-        profileDialog = new ProfileDialog(this, connectionEstablished);
+//        profileDialog = new ProfileDialog(this, connectionEstablished);
 
         toolbar2.setOnClickListener(this);
         connectBtn.setOnClickListener(this);
