@@ -3,7 +3,7 @@
     android:fillAfter="true" >
 
     <alpha
-        android:duration="2500"
+        android:duration="1700"
         android:fromAlpha="1.0"
         android:repeatCount="infinite"
         android:repeatMode="reverse"
