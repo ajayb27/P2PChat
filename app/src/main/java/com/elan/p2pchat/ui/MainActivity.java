@@ -2,37 +2,23 @@ package com.elan.p2pchat.ui;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
-import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.appcompat.view.menu.MenuBuilder;
 import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
-
-import android.annotation.SuppressLint;
-import android.app.Service;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.graphics.Typeface;
-import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.Gravity;
-import android.view.KeyEvent;
-import android.view.Menu;
-import android.view.MenuInflater;
-import android.view.MenuItem;
 import android.view.View;
-import android.view.inputmethod.EditorInfo;
-import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -113,13 +99,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     if (actualMessage.contains("&&")) {
                         String[] details = actualMessage.split("&&", 0);
-                        Log.d(TAG, "details[0]: " + details[0]);
-                        Log.d(TAG, "details[0]: " + details[1]);
+
                         AppConstants.CONVERSATIONALIST_NAME = details[0];
                         AppConstants.CONVERSATIONALIST_PHONE_NUMBER = details[1];
-//                        Toast.makeText(MainActivity.this, AppConstants.CONVERSATIONALIST_NAME + "   " +
-//                                                                        AppConstants.CONVERSATIONALIST_PHONE_NUMBER, Toast.LENGTH_SHORT).show();
-
                         setSupportActionBar(toolbar2);
                         getSupportActionBar().setDisplayShowTitleEnabled(false);
 
@@ -129,8 +111,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                     } else if (actualMessage.contains("&-&-&")) {
                         String[] details = actualMessage.split("&-&-&", 0);
-                        Log.d(TAG, "type: " + details[0]);
-                        Log.d(TAG, "room: " + details[1]);
 
                         if (details[0].equals("request")) {
                             final AlertDialog.Builder builder = new AlertDialog.Builder(MainActivity.this);
@@ -142,13 +122,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     String message = "response&-&-&" + "no";
 
                                     try {
-                                        Log.d(TAG, "TRYING ENCRYPTION FOR : " + message);
                                         String encryptedData = aes.encrypt(message);
                                         //sending the encrypted data
                                         sendReceive.write(encryptedData);
 
                                     } catch (Exception e) {
-                                        Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
                                         e.printStackTrace();
                                     }
 
@@ -162,7 +140,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                     String message = "response&-&-&" + "yes";
 
                                     try {
-                                        Log.d(TAG, "TRYING ENCRYPTION FOR : " + message);
                                         String encryptedData = aes.encrypt(message);
                                         //sending the encrypted data
                                         sendReceive.write(encryptedData);
@@ -177,7 +154,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                                         JitsiMeetActivity.launch(MainActivity.this, jitsiMeetConferenceOptions);
 
                                     } catch (Exception e) {
-                                        Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
                                         e.printStackTrace();
                                     }
                                     dialogInterface.cancel();
@@ -350,13 +326,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         String message = "request&-&-&" + Utils.getIPAddress(true);
 
         try {
-            Log.d(TAG, "TRYING ENCRYPTION FOR : " + message);
             String encryptedData = aes.encrypt(message);
             //sending the encrypted data
             sendReceive.write(encryptedData);
 
         } catch (Exception e) {
-            Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
             e.printStackTrace();
         }
 
@@ -369,7 +343,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void openScanner() {
-        Log.d("qwerty", "here11");
         Intent intent = new Intent(MainActivity.this, QRScanning.class);
         startActivityForResult(intent, 2);
     }
@@ -454,7 +427,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 sendReceive.write(encryptedData);
 
             } catch (Exception e) {
-                Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
                 e.printStackTrace();
             }
         }
@@ -539,14 +511,9 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
                         textView.setTextColor(color);
                         textView.setTextColor(getResources().getColor(R.color.black));
-                        Log.d(TAG, "encrypted msg: " + message);
                         String actualMessage = aes.decrypt(message);
-                        Log.d(TAG, "decrypted msg: " + actualMessage);
-
 
                         String[] messages = actualMessage.split("@%@", 0);
-                        Log.d(TAG, "messages[0]: " + messages[0]);
-                        Log.d(TAG, "messages[0]: " + messages[1]);
 
                         textView.setTextSize(20);
                         textView.setText(messages[0]); // setting message on the message textview
@@ -603,7 +570,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     protected void onResume() {
         super.onResume();
         appPreferences = AppPreferences.getAppPreferences(this);
-        Log.d("qwerty", "here");
     }
 
 
@@ -637,16 +603,12 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 Looper.prepare();
 
                 showToast("Server Started. Waiting for client...");
-                Log.d(TAG, "Waiting for client...");
                 socket = serverSocket.accept();
-                Log.d(TAG, "Connection established from server");
                 sendReceive = new SendReceive(socket);
                 sendReceive.start();
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.d(TAG, "ERROR: " + e);
             } catch (Exception e) {
-                Log.d(TAG, "ERROR: " + e);
             }
         }
     }
@@ -686,7 +648,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 else message = message + "-1";
 
                 try {
-                    Log.d(TAG, "TRYING ENCRYPTION FOR : " + message);
                     String encryptedData = aes.encrypt(message);
                     //sending the encrypted data
                     sendReceive.write(encryptedData);
@@ -695,17 +656,14 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     runOnUiThread(()->
                             Toast.makeText(MainActivity.this,"User left",Toast.LENGTH_SHORT).show()
                     );
-                    Log.d(TAG, "ERROR WITH ENCRYPTION : " + e.getMessage());
                     e.printStackTrace();
                 }
 
-                Log.d(TAG, "Client is connected to server");
 
                 // enabling invisible components
                 enableComponent();
             } catch (IOException e) {
                 e.printStackTrace();
-                Log.d(TAG, "Can't connect to server. Check the IP address and Port number and try again: " + e);
                 runOnUiThread(()->
                         Toast.makeText(MainActivity.this,"Cannot connect at the moment",Toast.LENGTH_SHORT).show()
                 );
@@ -713,7 +671,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 runOnUiThread(()->
                         Toast.makeText(MainActivity.this,"Cannot connect at the moment",Toast.LENGTH_SHORT).show()
                 );
-                Log.d(TAG, "ERROR: " + e);
             }
         }
     }
@@ -777,12 +734,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                         }
                     });
                 } catch (IOException e) {
-                    Log.d(TAG, "Can't send message: " + e);
                     runOnUiThread(()->
                         Toast.makeText(MainActivity.this,"User left",Toast.LENGTH_SHORT).show()
                     );
                 } catch (Exception e) {
-                    Log.d(TAG, "Error: " + e);
                     runOnUiThread(()->
                             Toast.makeText(MainActivity.this,"User left",Toast.LENGTH_SHORT).show()
                     );
